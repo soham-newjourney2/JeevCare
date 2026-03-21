@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Service | JeevCare</title>
+    <link rel="stylesheet" href="/css/index.css">
+</head>
+
+<body class="dash-layout">
+
+    <div id="nav-placeholder"></div>
+
+    <div id="sidebar-placeholder"></div>
+
+    <main class="dash-main animate-fade-in">
+        <a href="/citizen/services.html" style="display:inline-block; margin-bottom: 20px;">&larr; Back to Directory</a>
+
+        <div class="glass-card" style="max-width: 600px;">
+            <h2 id="formTitle">Book Appointment</h2>
+            <p style="color: #6b7280; margin-bottom: 30px;">Request a slot. The provider will confirm your booking.</p>
+
+            <div id="statusBox"
+                style="display:none; padding:15px; border-radius:8px; margin-bottom:20px; font-weight:600;"></div>
+
+            <form id="bookingForm">
+                <input type="hidden" id="providerId">
+                <div class="form-group">
+                    <label class="form-label">Service Type</label>
+                    <select id="serviceType" class="form-input" required disabled
+                        style="background-color: #f9fafb; cursor: not-allowed; opacity: 1;">
+                        <option value="vet">Veterinary Care</option>
+                        <option value="shelter">Shelter Visit</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Select Available Time Slot</label>
+                    <select id="slotSelect" class="form-input" required>
+                        <option value="">Loading slots...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Notes for Provider / Symptoms</label>
+                    <textarea id="notes" class="form-input" rows="4" required
+                        placeholder="Describe what you need help with..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;" id="submitBtn">Request
+                    Appointment</button>
+            </form>
+        </div>
+    </main>
+
+    <script src="/js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            const name = params.get('name');
+            const type = params.get('type');
+
+            if (!id) {
+                document.getElementById('formTitle').innerText = "Invalid Provider ID";
+                document.getElementById('bookingForm').style.display = 'none';
+                return;
+            }
+
+            if (name) {
+                document.getElementById('formTitle').innerText = `Book: ${decodeURIComponent(name)}`;
+            }
+            if (type) {
+                const typeSelect = document.getElementById('serviceType');
+                typeSelect.value = type;
+                // Double check if valid
+                if (!typeSelect.value) {
+                    typeSelect.innerHTML += `<option value="${type}" selected>${type}</option>`;
+                }
+            }
+
+            document.getElementById('providerId').value = id;
+
+            // Fetch Provider Slots
+            const slotSelect = document.getElementById('slotSelect');
+            try {
+                const res = await window.API.get(`/services/${id}/slots`);
+                let slots = res.data || [];
+
+                if (slots.length === 0) {
+                    slotSelect.innerHTML = '<option value="">No available slots found for this provider.</option>';
+                    slotSelect.disabled = true;
+                    document.getElementById('submitBtn').disabled = true;
+                } else {
+                    // Sort chronologically
+                    slots.sort((a, b) => new Date(a.date + 'T' + a.time) - new Date(b.date + 'T' + b.time));
+
+                    slotSelect.innerHTML = '<option value="">Select a slot</option>';
+                    slots.forEach(slot => {
+                        const d = new Date(slot.date + 'T' + slot.time);
+                        const displayDate = d.toLocaleDateString();
+                        const displayTime = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        // Store the original date and time format in value
+                        slotSelect.innerHTML += `<option value='${JSON.stringify({ date: slot.date, time: slot.time })}'>${displayDate} at ${displayTime}</option>`;
+                    });
+                }
+            } catch (err) {
+                slotSelect.innerHTML = `<option value="">Error fetching slots</option>`;
+            }
+        });
+
+        document.getElementById('bookingForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const btn = document.getElementById('submitBtn');
+            const statusBox = document.getElementById('statusBox');
+
+            const slotVal = document.getElementById('slotSelect').value;
+            if (!slotVal) {
+                alert("Please select a valid time slot.");
+                return;
+            }
+
+            const selectedSlot = JSON.parse(slotVal);
+
+            btn.innerText = "Submitting Request...";
+            btn.disabled = true;
+            statusBox.style.display = "none";
+
+            const payload = {
+                providerId: document.getElementById('providerId').value,
+                serviceType: document.getElementById('serviceType').value,
+                date: selectedSlot.date,
+                timeSlot: selectedSlot.time,
+                notes: document.getElementById('notes').value
+            };
+
+            try {
+                const res = await window.API.post('/services/book', payload);
+                statusBox.style.display = 'block';
+                statusBox.style.background = "hsla(145, 63%, 42%, 0.1)";
+                statusBox.style.color = "var(--color-success)";
+                statusBox.innerText = `Success! Appointment requested.`;
+                document.getElementById('bookingForm').reset();
+
+                // Immediately remove the selected option from the dropdown
+                const sel = document.getElementById('slotSelect');
+                sel.remove(sel.selectedIndex);
+                if (sel.options.length <= 1) { // Only the default option remains
+                    sel.innerHTML = '<option value="">No more available slots.</option>';
+                    sel.disabled = true;
+                    btn.disabled = true;
+                    btn.innerText = "Request Appointment";
+                }
+            } catch (e) {
+                statusBox.style.display = 'block';
+                statusBox.style.background = "hsla(354, 70%, 54%, 0.1)";
+                statusBox.style.color = "var(--color-danger)";
+                statusBox.innerText = "Error: " + (e.message || "Failed to book");
+            } finally {
+                if (!btn.disabled || btn.innerText !== "Request Appointment") {
+                    btn.innerText = "Request Appointment";
+                    btn.disabled = false;
+                }
+            }
+        });
+    </script>
+    <script src="/js/layout.js"></script>
+
+    <script>
+        window.Layout.renderAppNav('nav-placeholder', 'Citizen Portal');
+        window.Layout.renderSidebar('sidebar-placeholder', 'citizen', 'services');
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adopt & Foster | JeevCare</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <style>
+        .grid-pets {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: var(--border-radius-lg);
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+    </style>
+</head>
+
+<body class="dash-layout">
+    <div id="nav-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+
+    <main class="dash-main animate-fade-in">
+        <h1 style="font-size: 2.2rem; margin-bottom: 10px;">Find a Companion</h1>
+        <p style="color: #6b7280; margin-bottom: 30px;">Open your home to a rescued animal. Adopt or foster them.</p>
+
+        <div class="grid-pets" id="petsContainer">
+            <!-- Loading -->
+        </div>
+    </main>
+
+    <!-- Application Modal -->
+    <div class="modal" id="applyModal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 20px;" id="modalTitle">Apply</h2>
+            <form id="applyForm">
+                <input type="hidden" id="petId">
+                <div class="form-group">
+                    <label class="form-label">Application Type</label>
+                    <select id="aType" class="form-input" required>
+                        <option value="adopt">Adopt</option>
+                        <option value="foster">Foster</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Your Experience</label>
+                    <textarea id="aExp" class="form-input" rows="2"
+                        placeholder="Tell us about your experience with pets..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Housing Type</label>
+                    <select id="aHouse" class="form-input" required>
+                        <option value="Apartment">Apartment</option>
+                        <option value="House">House</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Why do you want to adopt/foster this pet?</label>
+                    <textarea id="aReason" class="form-input" rows="3" required></textarea>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="button" class="btn btn-outline" onclick="closeModal()" style="flex:1;">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="flex:1;">Submit Application</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            loadAvailablePets();
+
+            document.getElementById('applyForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const petId = document.getElementById('petId').value;
+                const data = {
+                    applicationType: document.getElementById('aType').value,
+                    experience: document.getElementById('aExp').value,
+                    housingType: document.getElementById('aHouse').value,
+                    reason: document.getElementById('aReason').value
+                };
+                try {
+                    await window.API.post(`/adoptions/${petId}/apply`, data);
+                    alert("Application submitted successfully! The NGO will review your request.");
+                    closeModal();
+                } catch (err) {
+                    alert("Error: " + err.message);
+                }
+            });
+        });
+
+        async function loadAvailablePets() {
+            const container = document.getElementById('petsContainer');
+            try {
+                const res = await window.API.get('/adoptions');
+                if (res.data.length === 0) {
+                    container.innerHTML = '<p>No pets currently available for adoption.</p>';
+                    container.style.display = 'block';
+                    return;
+                }
+                container.innerHTML = res.data.map(p => `
+                    <div class="glass-card" style="padding: 24px; display: flex; flex-direction: column;">
+                        <div style="font-size: 3rem; margin-bottom: 10px; text-align: center;">🐾</div>
+                        <h3 style="text-align: center; margin-bottom: 5px;">${p.name}</h3>
+                        <p class="text-sm text-center" style="color: #6b7280; margin-bottom: 15px;">${p.species} • ${p.healthStatus}</p>
+                        <p class="text-sm" style="margin-bottom: 15px; flex-grow: 1;">${p.description}</p>
+                        <p class="text-sm" style="margin-bottom: 20px; color: #374151;"><strong>Rescued by:</strong> ${p.provider ? p.provider.name : 'Verified Shelter'}</p>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: auto;" onclick="openModal('${p._id}', '${p.name}')">Apply Now</button>
+                    </div>
+                `).join('');
+            } catch (e) {
+                container.innerHTML = 'Error loading pets.';
+            }
+        }
+
+        function openModal(petId, petName) {
+            document.getElementById('petId').value = petId;
+            document.getElementById('modalTitle').innerText = `Apply for ${petName}`;
+            document.getElementById('applyModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('applyModal').style.display = 'none';
+            document.getElementById('applyForm').reset();
+        }
+    </script>
+    <script src="/js/layout.js"></script>
+    <script>
+        window.Layout.renderAppNav('nav-placeholder', 'Citizen Portal');
+        window.Layout.renderSidebar('sidebar-placeholder', 'citizen', 'adopt');
+    </script>
+</body>
+
+</html>

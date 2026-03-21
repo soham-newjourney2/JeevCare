@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Appointments | JeevCare Citizen</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <style>
+        .booking-card {
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--glass-bg);
+        }
+
+        .booking-details h4 {
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .booking-details p {
+            color: #6b7280;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .booking-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body class="dash-layout">
+
+    <div id="nav-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+
+    <main class="dash-main animate-fade-in">
+        <h1 style="font-size: 2.2rem; margin-bottom: 10px;">My Appointments</h1>
+        <p style="color: #6b7280; margin-bottom: 30px;">Track your bookings with vets, shelters, and other physical
+            service providers.</p>
+
+        <div id="errorMsg" class="error-msg" style="display: none; margin-bottom: 20px;"></div>
+
+        <div id="loader">Fetching your appointments...</div>
+
+        <div id="appointmentsContainer" style="display: none;">
+            <!-- Bookings will be rendered here -->
+        </div>
+    </main>
+
+    <script src="/js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const container = document.getElementById('appointmentsContainer');
+            const loader = document.getElementById('loader');
+            const errorMsg = document.getElementById('errorMsg');
+
+            try {
+                const res = await window.API.get('/services/my-patient-bookings');
+                loader.style.display = 'none';
+                container.style.display = 'block';
+
+                if (!res.data || res.data.length === 0) {
+                    container.innerHTML = `
+                        <div class="glass-card" style="text-align: center; padding: 40px;">
+                            <p style="color: #6b7280; margin-bottom: 20px;">You have no appointments booked.</p>
+                            <a href="/citizen/services.html" class="btn btn-primary">Find a Provider</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = '';
+                res.data.forEach(bk => {
+                    const dateObj = new Date(bk.date);
+                    const displayDate = dateObj.toLocaleDateString();
+                    const providerName = bk.provider?.profile?.businessName || bk.provider?.name || 'Unknown Provider';
+
+                    html += `
+                        <div class="booking-card">
+                            <div class="booking-details">
+                                <h4>Appointment with ${providerName}</h4>
+                                <p><strong>Date:</strong> ${displayDate} | <strong>Time:</strong> ${bk.timeSlot}</p>
+                                <p><strong>Service:</strong> <span style="text-transform: capitalize;">${bk.serviceType}</span></p>
+                                <p><strong>Notes:</strong> ${bk.notes || '--'}</p>
+                            </div>
+                            <div>
+                                <span class="status-pill status-${bk.status === 'cancelled' ? 'resolved' : bk.status}" 
+                                      ${bk.status === 'cancelled' ? 'style="background: hsla(354, 70%, 54%, 0.1); color: var(--color-danger);"' : ''}>
+                                    ${bk.status.toUpperCase()}
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+
+            } catch (err) {
+                loader.style.display = 'none';
+                errorMsg.innerText = 'Error: ' + err.message;
+                errorMsg.style.display = 'block';
+            }
+        });
+    </script>
+    <script src="/js/layout.js"></script>
+    <script>
+        window.Layout.renderAppNav('nav-placeholder', 'Citizen Portal');
+        window.Layout.renderSidebar('sidebar-placeholder', 'citizen', 'appointments');
+    </script>
+</body>
+
+</html>

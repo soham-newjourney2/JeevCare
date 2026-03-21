@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veterinary Tele-Triage | JeevCare</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <style>
+        .consult-card {
+            background: var(--glass-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--glass-border);
+            border-left: 4px solid var(--brand-primary);
+        }
+    </style>
+</head>
+
+<body class="dash-layout">
+    <div id="nav-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+
+    <main class="dash-main animate-fade-in">
+        <h1 style="font-size: 2.2rem; margin-bottom: 10px;">Tele-Triage</h1>
+        <p style="color: #6b7280; margin-bottom: 30px;">Book a virtual consultation with a vetted professional for minor
+            pet concerns.</p>
+
+        <div class="grid-2">
+            <div>
+                <div class="glass-card">
+                    <h2 style="margin-bottom: 20px;">Book a Session</h2>
+                    <form id="bookForm">
+                        <div class="form-group">
+                            <label class="form-label">Select Veterinarian</label>
+                            <select id="tVet" class="form-input" required>
+                                <option value="">Loading professionals...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Animal Type</label>
+                            <input type="text" id="tAnimal" class="form-input" placeholder="E.g. Dog, Cat, Parrot"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Symptoms / Reason for visit</label>
+                            <textarea id="tSymptoms" class="form-input" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Preferred Date & Time</label>
+                            <select id="tSlot" class="form-input" required disabled>
+                                <option value="">Select a vet first...</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Request Consultation</button>
+                    </form>
+                </div>
+            </div>
+
+            <div>
+                <div class="glass-card">
+                    <h2 style="margin-bottom: 20px;">Your Consultations</h2>
+                    <div id="consultsList">Loading...</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const vetSelect = document.getElementById('tVet');
+            const slotSelect = document.getElementById('tSlot');
+
+            try {
+                const res = await window.API.get('/teleconsult/vets');
+                if (!res.data || res.data.length === 0) {
+                    vetSelect.innerHTML = '<option value="">No vets available right now.</option>';
+                } else {
+                    vetSelect.innerHTML = '<option value="">-- Choose --</option>' + res.data.map(v => `<option value="${v._id}">${v.businessName || v.name} (${v.slotsAvailable} slots)</option>`).join('');
+                }
+            } catch (err) {
+                vetSelect.innerHTML = '<option value="">Error loading vets.</option>';
+            }
+
+            // Listen for Vet selection to fetch slots
+            vetSelect.addEventListener('change', async (e) => {
+                const vetId = e.target.value;
+                if (!vetId) {
+                    slotSelect.innerHTML = '<option value="">Select a vet first...</option>';
+                    slotSelect.disabled = true;
+                    return;
+                }
+
+                slotSelect.innerHTML = '<option value="">Loading slots...</option>';
+                slotSelect.disabled = true;
+
+                try {
+                    const res = await window.API.get(`/services/${vetId}/slots`);
+                    let slots = res.data || [];
+
+                    if (slots.length === 0) {
+                        slotSelect.innerHTML = '<option value="">No available slots found.</option>';
+                    } else {
+                        // Sort chronologically
+                        slots.sort((a, b) => new Date(a.date + 'T' + a.time) - new Date(b.date + 'T' + b.time));
+
+                        slotSelect.innerHTML = '<option value="">Select a slot</option>';
+                        slots.forEach(slot => {
+                            const d = new Date(slot.date + 'T' + slot.time);
+                            const displayDate = d.toLocaleDateString();
+                            const displayTime = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                            slotSelect.innerHTML += `<option value='${JSON.stringify({ date: slot.date, time: slot.time })}'>${displayDate} at ${displayTime}</option>`;
+                        });
+                        slotSelect.disabled = false;
+                    }
+                } catch (err) {
+                    slotSelect.innerHTML = `<option value="">Error fetching slots</option>`;
+                }
+            });
+
+            loadConsults();
+
+            document.getElementById('bookForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const slotVal = document.getElementById('tSlot').value;
+                if (!slotVal) {
+                    alert("Please select a valid time slot.");
+                    return;
+                }
+
+                const selectedSlot = JSON.parse(slotVal);
+
+                const data = {
+                    vet: document.getElementById('tVet').value,
+                    animalType: document.getElementById('tAnimal').value,
+                    symptoms: document.getElementById('tSymptoms').value,
+                    date: selectedSlot.date,
+                    timeSlot: selectedSlot.time
+                };
+
+                if (!data.vet) return alert("Please select a vet.");
+                try {
+                    await window.API.post('/teleconsult', data);
+                    alert("Consultation requested successfully.");
+                    document.getElementById('bookForm').reset();
+                    document.getElementById('tSlot').innerHTML = '<option value="">Select a vet first...</option>';
+                    document.getElementById('tSlot').disabled = true;
+                    loadConsults();
+                } catch (err) {
+                    alert("Error: " + err.message);
+                }
+            });
+        });
+
+        async function loadConsults() {
+            const container = document.getElementById('consultsList');
+            try {
+                const res = await window.API.get('/teleconsult');
+                if (res.data.length === 0) {
+                    container.innerHTML = '<p class="text-sm text-gray-500">No past or upcoming consultations.</p>';
+                    return;
+                }
+                container.innerHTML = res.data.map(c => {
+                    // Reconstruct time from unified format
+                    const timeObj = new Date(c.date + 'T' + c.timeSlot);
+                    const timeStr = isNaN(timeObj) ? `${c.date} ${c.timeSlot}` : timeObj.toLocaleString();
+
+                    const action = c.status === 'scheduled' && c.meetingLink
+                        ? `<a href="${c.meetingLink}" target="_blank" class="btn btn-primary" style="margin-top:10px; display:inline-block; padding: 6px 12px;">Join Meeting</a>`
+                        : '';
+                    return `
+                    <div class="consult-card">
+                        <h4 style="margin:0;">With ${c.vet.name}</h4>
+                        <p class="text-sm mt-1"><strong>Time:</strong> ${timeStr}</p>
+                        <p class="text-sm mt-1"><strong>Symptoms:</strong> ${c.symptoms}</p>
+                        <p class="text-sm mt-1">Status: <strong style="text-transform: capitalize;">${c.status}</strong></p>
+                        ${action}
+                    </div>
+                `}).join('');
+            } catch (err) {
+                container.innerHTML = "Error loading consults.";
+            }
+        }
+    </script>
+    <script src="/js/layout.js"></script>
+    <script>
+        window.Layout.renderAppNav('nav-placeholder', 'Citizen Portal');
+        window.Layout.renderSidebar('sidebar-placeholder', 'citizen', 'tele-triage');
+    </script>
+</body>
+
+</html>

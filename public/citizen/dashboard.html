@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Citizen Dashboard | JeevCare</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <style>
+        .metric-card {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .metric-number {
+            font-size: 3rem;
+            font-family: var(--font-heading);
+            font-weight: 800;
+            color: var(--brand-primary);
+            margin-bottom: 10px;
+        }
+
+        .metric-label {
+            color: #6b7280;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body class="dash-layout">
+
+    <div id="nav-placeholder"></div>
+
+    <div id="sidebar-placeholder"></div>
+
+    <main class="dash-main animate-fade-in">
+        <h1 style="font-size: 2.5rem;">Welcome back, <span id="userNameTitle">Citizen</span>!</h1>
+        <p style="color: #6b7280; margin-bottom: 40px;">Here is an overview of your impact and trust standing in the
+            community.</p>
+
+        <div class="grid-3 mb-20">
+            <div class="glass-card metric-card">
+                <div class="metric-number" id="m_reports">0</div>
+                <div class="metric-label">Total Valid Reports</div>
+            </div>
+            <div class="glass-card metric-card">
+                <div class="metric-number" id="m_score">0</div>
+                <div class="metric-label">Trust Score</div>
+            </div>
+            <div class="glass-card metric-card">
+                <div class="metric-number" id="m_active">0</div>
+                <div class="metric-label">Active / Pending Cases</div>
+            </div>
+        </div>
+
+        <div class="glass-card" style="margin-top: 20px; text-align: center;">
+            <h3 style="margin-bottom: 15px;">Your Badges</h3>
+            <div id="badgesContainer">Loading badges...</div>
+        </div>
+
+        <div class="glass-card" style="margin-top: 40px;">
+            <h3>Quick Actions</h3>
+            <div style="display: flex; gap: 20px; margin-top: 20px;">
+                <a href="/citizen/report.html" class="btn btn-primary">Report New Incident</a>
+                <a href="/citizen/services.html" class="btn btn-outline">Find a Nearest Vet</a>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+    <script src="/js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Initialize Auth
+                const profile = await window.API.getProfile();
+                document.getElementById('userName').innerText = profile.data.name;
+                document.getElementById('userNameTitle').innerText = profile.data.name.split(' ')[0];
+
+                // Fetch real reports stat logic
+                const reportsRes = await window.API.get('/incidents/my-reports');
+                const reports = reportsRes.data;
+
+                document.getElementById('m_reports').innerText = reports.length;
+                document.getElementById('m_active').innerText = reports.filter(r => ['reported', 'assigned', 'in_progress'].includes(r.status)).length;
+
+                // Fetch Real Community Stats
+                const commRes = await window.API.get('/community/me');
+                if (commRes.data) {
+                    document.getElementById('m_score').innerText = commRes.data.trustScore;
+                    document.getElementById('m_reports').innerText = commRes.data.validReports;
+                    const badges = commRes.data.badges;
+                    const badgesHtml = badges.length > 0
+                        ? badges.map(b => `<span class="status-pill status-resolved" style="background: linear-gradient(135deg, gold, orange); color: white; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); font-weight: bold;">🎖️ ${b}</span>`).join(' ')
+                        : '<span style="color: #6b7280;">No badges yet - keep reporting to earn them!</span>';
+                    document.getElementById('badgesContainer').innerHTML = badgesHtml;
+                }
+
+                // Connect Socket
+                const socket = io();
+                socket.emit('join_citizen_room', profile.data._id);
+                socket.on('status_update', (data) => {
+                    alert(`UPDATE: ${data.message}`);
+                    window.location.reload();
+                });
+
+            } catch (e) {
+                console.error("Dashboard error:", e);
+            }
+        });
+    </script>
+    <script src="/js/layout.js"></script>
+
+    <script>
+        window.Layout.renderAppNav('nav-placeholder', 'Citizen Portal');
+        window.Layout.renderSidebar('sidebar-placeholder', 'citizen', 'dashboard');
+    </script>
+</body>
+
+</html>

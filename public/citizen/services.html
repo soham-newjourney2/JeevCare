@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet Services | JeevCare</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <style>
+        .service-card {
+            background: var(--glass-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            padding: 24px;
+            text-align: center;
+            border: 1px solid var(--glass-border);
+            transition: var(--transition-fast);
+        }
+
+        .service-card:hover {
+            border-color: var(--brand-primary);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .sv-type {
+            display: inline-block;
+            background: hsla(207, 90%, 54%, 0.1);
+            color: var(--color-info);
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body class="dash-layout">
+
+    <div id="nav-placeholder"></div>
+
+    <div id="sidebar-placeholder"></div>
+
+    <main class="dash-main animate-fade-in">
+        <h1 style="font-size: 2.2rem; margin-bottom: 10px;">Verified Pet Services</h1>
+        <p style="color: #6b7280; margin-bottom: 40px;">Discover and book appointments with trusted veterinarians and
+            animal shelters.</p>
+
+        <div id="loader">Fetching available services...</div>
+        <div id="servicesContainer" class="grid-3" style="display: none;">
+            <!-- Fetched items -->
+        </div>
+    </main>
+
+    <script src="/js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const container = document.getElementById('servicesContainer');
+            const loader = document.getElementById('loader');
+
+            try {
+                // Fetch verified service providers
+                const res = await window.API.get('/services'); // Endpoint from our Phase 1 routes
+                const providers = res.data;
+
+                loader.style.display = 'none';
+
+                if (providers.length === 0) {
+                    container.style.display = 'block';
+                    container.innerHTML = '<div class="glass-card text-center" style="grid-column: span 3;"><h3>No Services Found</h3><p>There are currently no verified service providers on the platform.</p></div>';
+                    return;
+                }
+
+                container.style.display = 'grid';
+                providers.forEach(prov => {
+                    const el = document.createElement('div');
+                    el.className = 'service-card';
+                    el.innerHTML = `
+                        <div class="sv-type">${prov.serviceType}</div>
+                        <h3 style="margin-bottom: 5px;">${prov.businessName}</h3>
+                        <p style="color:#6b7280; font-size: 0.9rem; margin-bottom: 20px;">★ ${prov.rating} / 5</p>
+                        <a href="/citizen/book-service.html?id=${prov._id}&name=${encodeURIComponent(prov.businessName)}&type=${prov.serviceType}" class="btn btn-outline" style="width: 100%;">Book Appointment</a>
+                    `;
+                    container.appendChild(el);
+                });
+
+            } catch (e) {
+                loader.innerText = "Error loading services: " + e.message;
+            }
+        });
+    </script>
+    <script src="/js/layout.js"></script>
+
+    <script>
+        window.Layout.renderAppNav('nav-placeholder', 'Citizen Portal');
+        window.Layout.renderSidebar('sidebar-placeholder', 'citizen', 'services');
+    </script>
+</body>
+
+</html>

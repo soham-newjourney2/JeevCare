@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urgent Causes & Donations | JeevCare</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <style>
+        .fundraiser-card {
+            padding: 24px;
+            transition: var(--transition-fast);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .fundraiser-card:hover {
+            border-color: var(--brand-primary);
+        }
+
+        .progress-bar-bg {
+            background: #e5e7eb;
+            border-radius: 50px;
+            height: 10px;
+            width: 100%;
+            margin: 15px 0 5px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background: var(--brand-primary);
+            height: 100%;
+            border-radius: 50px;
+            transition: width 1s ease-in-out;
+        }
+
+        .campaign-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #6b7280;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .donation-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body class="dash-layout">
+
+    <div id="nav-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+
+    <main class="dash-main animate-fade-in">
+        <h1 style="font-size: 2.2rem; margin-bottom: 10px;">Urgent Animal Causes</h1>
+        <p style="color: #6b7280; margin-bottom: 40px;">Support local verified NGOs by contributing directly to critical
+            rescue scenarios and resource purchases.</p>
+
+        <div id="loader">Fetching active fundraisers...</div>
+        <div id="campaignsContainer" class="grid-3" style="display: none;">
+            <!-- Campaigns populated by JS -->
+        </div>
+    </main>
+
+    <!-- Donation Modal -->
+    <div id="donationModal" class="donation-modal">
+        <div class="glass-card" style="width: 100%; max-width: 400px; background: white;">
+            <h2 id="modalTitle" style="margin-bottom: 5px;">Make a Contribution</h2>
+            <p id="modalNgo" style="color: #6b7280; font-size: 0.9rem; margin-bottom: 20px;"></p>
+
+            <div class="form-group">
+                <label class="form-label">Donation Amount (INR)</label>
+                <input type="number" id="donationAmount" class="form-input" placeholder="e.g. 500" min="10">
+            </div>
+
+            <input type="hidden" id="activeCampaignId">
+            <div id="modalError" class="error-msg" style="display: none;"></div>
+
+            <div style="display: flex; gap: 10px; margin-top: 25px;">
+                <button class="btn btn-primary" onclick="processDonation()" style="flex: 1;" id="donateBtn">Donate
+                    Now</button>
+                <button class="btn btn-outline" onclick="closeModal()" style="flex: 1;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const container = document.getElementById('campaignsContainer');
+            const loader = document.getElementById('loader');
+
+            const loadCampaigns = async () => {
+                try {
+                    const res = await window.API.get('/donations');
+                    const campaigns = res.data;
+
+                    loader.style.display = 'none';
+                    container.style.display = 'grid';
+                    container.innerHTML = '';
+
+                    if (campaigns.length === 0) {
+                        container.innerHTML = '<div class="glass-card text-center" style="grid-column: span 3;"><h3>No Active Campaigns</h3><p>There are currently no urgent fundraising requests from NGOs.</p></div>';
+                        return;
+                    }
+
+                    campaigns.forEach(camp => {
+                        const percent = Math.min(100, (camp.currentAmount / camp.targetAmount) * 100);
+
+                        const el = document.createElement('div');
+                        el.className = 'glass-card fundraiser-card';
+                        el.innerHTML = `
+                            <div>
+                                <span class="status-pill status-assigned" style="margin-bottom: 10px; font-size: 0.75rem;">${camp.ngo ? camp.ngo.name : 'Verified NGO'}</span>
+                                <h3 style="font-size: 1.2rem; margin-bottom: 10px;">${camp.title}</h3>
+                                <p style="font-size: 0.9rem; color: #4b5563; margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">${camp.description}</p>
+                            </div>
+                            
+                            <div>
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill" style="width: ${percent}%;"></div>
+                                </div>
+                                <div class="campaign-stats">
+                                    <span>₹${camp.currentAmount.toLocaleString()} raised</span>
+                                    <span>Goal: ₹${camp.targetAmount.toLocaleString()}</span>
+                                </div>
+                                
+                                <button class="btn btn-primary" style="width: 100%;" onclick="openModal('${camp._id}', '${camp.title.replace(/'/g, "\\'")}', '${camp.ngo ? camp.ngo.name.replace(/'/g, "\\'") : 'NGO'}')">Support Cause</button>
+                            </div>
+                        `;
+                        container.appendChild(el);
+                    });
+
+                } catch (e) {
+                    loader.innerText = "Error loading campaigns: " + e.message;
+                }
+            };
+
+            window.openModal = (id, title, ngo) => {
+                document.getElementById('activeCampaignId').value = id;
+                document.getElementById('modalTitle').innerText = title;
+                document.getElementById('modalNgo').innerText = 'Fundraiser by: ' + ngo;
+                document.getElementById('donationAmount').value = '';
+                document.getElementById('modalError').style.display = 'none';
+                document.getElementById('donationModal').style.display = 'flex';
+            };
+
+            window.closeModal = () => {
+                document.getElementById('donationModal').style.display = 'none';
+            };
+
+            window.processDonation = async () => {
+                const id = document.getElementById('activeCampaignId').value;
+                const amt = document.getElementById('donationAmount').value;
+                const errBox = document.getElementById('modalError');
+                const btn = document.getElementById('donateBtn');
+
+                if (!amt || isNaN(amt) || amt <= 0) {
+                    errBox.innerText = 'Please enter a valid amount.';
+                    errBox.style.display = 'block';
+                    return;
+                }
+
+                btn.innerText = 'Processing...';
+                btn.disabled = true;
+
+                try {
+                    const res = await window.API.post('/donations/donate', {
+                        campaignId: id,
+                        amount: Number(amt)
+                    });
+
+                    alert('Success: ' + res.message);
+                    closeModal();
+                    loadCampaigns(); // Reload the bars
+                } catch (e) {
+                    errBox.innerText = e.message;
+                    errBox.style.display = 'block';
+                } finally {
+                    btn.innerText = 'Donate Now';
+                    btn.disabled = false;
+                }
+            };
+
+            loadCampaigns();
+        });
+    </script>
+    <script src="/js/layout.js"></script>
+    <script>
+        window.Layout.renderAppNav('nav-placeholder', 'Citizen Portal');
+        window.Layout.renderSidebar('sidebar-placeholder', 'citizen', 'donations');
+    </script>
+</body>
+
+</html>

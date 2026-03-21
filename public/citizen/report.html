@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Emergency | JeevCare</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <style>
+        .form-card {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        #mapWarning {
+            color: var(--brand-accent);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body class="dash-layout">
+
+    <div id="nav-placeholder"></div>
+
+    <div id="sidebar-placeholder"></div>
+
+    <main class="dash-main animate-fade-in">
+        <h1 style="font-size: 2.2rem; margin-bottom: 30px;">Report an Animal Emergency</h1>
+
+        <div class="glass-card form-card">
+            <div id="statusBox"
+                style="display:none; padding:15px; border-radius:8px; margin-bottom:20px; font-weight:600;"></div>
+
+            <form id="incidentForm">
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Animal Type</label>
+                        <select id="animalType" class="form-input" required>
+                            <option value="Dog">Dog</option>
+                            <option value="Cat">Cat</option>
+                            <option value="Cow/Cattle">Cow/Cattle</option>
+                            <option value="Bird">Bird</option>
+                            <option value="Wildlife">Wildlife</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Primary Concern</label>
+                        <select id="concernType" class="form-input" required>
+                            <option value="Injured/Accident">Injured/Accident</option>
+                            <option value="Sick/Disease">Sick/Disease</option>
+                            <option value="Trapped/Stuck">Trapped/Stuck</option>
+                            <option value="Abuse/Cruelty">Abuse/Cruelty</option>
+                            <option value="Aggressive">Aggressive</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Detailed Description</label>
+                    <textarea id="description" class="form-input" rows="4"
+                        placeholder="Describe the animal's condition and visible injuries..." required></textarea>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Upload Image (Optional)</label>
+                        <input type="file" id="image" class="form-input" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" style="color:var(--color-danger);">Severity Flag</label>
+                        <label style="display:flex; align-items:center; gap:10px; padding: 14px 0;">
+                            <input type="checkbox" id="urgencyFlag" style="width:20px; height:20px;">
+                            <span>Mark as <strong>CRITICAL SOS</strong> (Life-threatening)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <hr style="border:0; border-top:1px solid var(--glass-border); margin: 30px 0;">
+
+                <h3>Location Data</h3>
+                <p id="mapWarning">Please allow location access so we can auto-route this case to the nearest NGO.</p>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Latitude</label>
+                        <input type="text" id="lat" class="form-input" readonly placeholder="Auto-detected">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Longitude</label>
+                        <input type="text" id="lng" class="form-input" readonly placeholder="Auto-detected">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-outline mb-20" onclick="getLocation()">Detect Current
+                    Location</button>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 20px;"
+                    id="submitBtn">Submit Emergency Report</button>
+            </form>
+        </div>
+    </main>
+
+    <script src="/js/api.js"></script>
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                document.getElementById('mapWarning').innerText = "Detecting location...";
+                document.getElementById('mapWarning').style.color = "var(--brand-dark)";
+                navigator.geolocation.getCurrentPosition((position) => {
+                    document.getElementById('lat').value = position.coords.latitude;
+                    document.getElementById('lng').value = position.coords.longitude;
+                    document.getElementById('mapWarning').innerText = "✓ Location detected.";
+                    document.getElementById('mapWarning').style.color = "var(--color-success)";
+                }, (err) => {
+                    alert("Location detection failed: " + err.message + ". Please try again or type manually.");
+                    document.getElementById('lat').removeAttribute('readonly');
+                    document.getElementById('lng').removeAttribute('readonly');
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        // Auto attempt on page load
+        getLocation();
+
+        // Form Submit
+        document.getElementById('incidentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const btn = document.getElementById('submitBtn');
+            const statusBox = document.getElementById('statusBox');
+
+            const lat = document.getElementById('lat').value;
+            const lng = document.getElementById('lng').value;
+
+            if (!lat || !lng) {
+                alert("Please detect or provide latitude and longitude.");
+                return;
+            }
+
+            btn.innerText = "Processing & Routing...";
+            btn.disabled = true;
+            statusBox.style.display = "none";
+
+            const formData = new FormData();
+            formData.append('animalType', document.getElementById('animalType').value);
+            formData.append('concernType', document.getElementById('concernType').value);
+            formData.append('description', document.getElementById('description').value);
+            formData.append('latitude', lat);
+            formData.append('longitude', lng);
+            formData.append('urgencyFlag', document.getElementById('urgencyFlag').checked);
+            formData.append('sosFlag', document.getElementById('urgencyFlag').checked); // Duplicate for now
+
+            const imageFile = document.getElementById('image').files[0];
+            if (imageFile) formData.append('image', imageFile);
+
+            try {
+                const res = await window.API.post('/incidents', formData);
+
+                statusBox.style.display = 'block';
+                if (res.data && res.data.status === 'duplicate') {
+                    statusBox.style.background = "hsla(38, 92%, 50%, 0.1)";
+                    statusBox.style.color = "var(--brand-accent)";
+                    statusBox.innerText = `Report logged as DUPLICATE. A similar nearby report exists.`;
+                    setTimeout(() => window.location.href = '/citizen/my-reports.html', 3000);
+                } else {
+                    statusBox.style.background = "hsla(145, 63%, 42%, 0.1)";
+                    statusBox.style.color = "var(--color-success)";
+                    statusBox.innerText = `Success! Incident routed to NGO ID: ${res.assignedTo || 'Pending assignment'}`;
+                    setTimeout(() => window.location.href = '/citizen/my-reports.html', 2000);
+                }
+                document.getElementById('incidentForm').reset();
+            } catch (e) {
+                statusBox.style.display = 'block';
+                statusBox.style.background = "hsla(354, 70%, 54%, 0.1)";
+                statusBox.style.color = "var(--color-danger)";
+                statusBox.innerText = e.message;
+            } finally {
+                btn.innerText = "Submit Emergency Report";
+                btn.disabled = false;
+            }
+        });
+    </script>
+    <script src="/js/layout.js"></script>
+
+    <script>
+        window.Layout.renderAppNav('nav-placeholder', 'Citizen Portal');
+        window.Layout.renderSidebar('sidebar-placeholder', 'citizen', 'report');
+    </script>
+</body>
+
+</html>

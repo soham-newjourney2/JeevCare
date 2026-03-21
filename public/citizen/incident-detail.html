@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incident Details | JeevCare</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <style>
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--brand-primary);
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 20px;
+            bottom: -20px;
+            width: 2px;
+            background: #e5e7eb;
+        }
+
+        .timeline-item:last-child::after {
+            display: none;
+        }
+
+        .timeline-date {
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+
+        .detail-card {
+            margin-top: 30px;
+        }
+
+        .detail-label {
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-size: 1.1rem;
+            color: var(--brand-dark);
+            margin-bottom: 20px;
+        }
+
+        #ngoBox {
+            display: none;
+            background: hsla(207, 90%, 54%, 0.1);
+            border: 1px solid hsla(207, 90%, 54%, 0.3);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body class="dash-layout">
+
+    <div id="nav-placeholder"></div>
+
+    <div id="sidebar-placeholder"></div>
+
+    <main class="dash-main animate-fade-in">
+        <a href="/citizen/my-reports.html" style="display:inline-block; margin-bottom: 20px;">&larr; Back to History</a>
+
+        <h1 id="titleText">Loading Case...</h1>
+        <div id="statusBadge" class="status-pill mb-20"></div>
+
+        <div id="ngoBox">
+            <h3 style="color: var(--color-info); margin-bottom: 5px;">Rescue Organization Assigned</h3>
+            <p id="ngoNameText" style="font-weight: 600;">Loading...</p>
+        </div>
+
+        <div class="grid-2">
+            <div class="glass-card detail-card">
+                <h3>Incident Information</h3>
+                <hr style="border:0; border-top:1px solid var(--glass-border); margin: 15px 0;">
+
+                <div class="detail-label">Animal Type</div>
+                <div class="detail-value" id="d_animal">--</div>
+
+                <div class="detail-label">Primary Concern</div>
+                <div class="detail-value" id="d_concern">--</div>
+
+                <div class="detail-label">Description</div>
+                <div class="detail-value" id="d_desc">--</div>
+
+                <div class="detail-label">Location (Lat, Lng)</div>
+                <div class="detail-value" id="d_loc">--</div>
+
+                <div id="imageBox" style="display:none; margin-top: 20px;">
+                    <div class="detail-label">Uploaded Image</div>
+                    <img id="d_img" src="" style="max-width: 100%; border-radius: 8px; margin-top: 10px;">
+                </div>
+            </div>
+
+            <div class="glass-card detail-card">
+                <h3>Case Timeline</h3>
+                <hr style="border:0; border-top:1px solid var(--glass-border); margin: 15px 0;">
+                <div id="timelineContainer">
+                    <div class="timeline-item">
+                        <div class="timeline-date">Loading...</div>
+                        <div>Fetching timeline events...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+    <script src="/js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+
+            if (!id) {
+                document.getElementById('titleText').innerText = "Invalid Case ID";
+                return;
+            }
+
+            try {
+                // We'll reuse the my-reports array to find this specific one since we lack a GET /incidents/:id in Phase 1
+                // Wait, our backend has router.route('/:id').get(protect, getIncident); Let's use it!
+                const res = await window.API.get(`/incidents/${id}`);
+                const incident = res.data;
+
+                document.getElementById('titleText').innerText = `Case Details: ${incident.animalType}`;
+
+                const sb = document.getElementById('statusBadge');
+                sb.innerText = incident.status.replace('_', ' ').toUpperCase();
+                sb.className = `status-pill status-${incident.status}`;
+
+                document.getElementById('d_animal').innerText = incident.animalType;
+                document.getElementById('d_concern').innerText = incident.concernType;
+                document.getElementById('d_desc').innerText = incident.description;
+                document.getElementById('d_loc').innerText = `${incident.location.coordinates[1]}, ${incident.location.coordinates[0]}`;
+
+                if (incident.imageUrl) {
+                    document.getElementById('imageBox').style.display = 'block';
+                    document.getElementById('d_img').src = incident.imageUrl;
+                }
+
+                // Wait, assignedTo is an ID on Incident. We'll show standard timeline
+                const timeline = document.getElementById('timelineContainer');
+                timeline.innerHTML = ''; // clear
+
+                // Initial Report Event
+                timeline.innerHTML += `
+                    <div class="timeline-item">
+                        <div class="timeline-date">${new Date(incident.createdAt).toLocaleString()}</div>
+                        <div>Incident Reported by Citizen</div>
+                    </div>
+                `;
+
+                if (incident.status === 'assigned' || incident.status === 'in_progress' || incident.status === 'resolved') {
+                    document.getElementById('ngoBox').style.display = 'block';
+                    document.getElementById('ngoNameText').innerText = "An NGO has been attached to this case.";
+
+                    timeline.innerHTML += `
+                        <div class="timeline-item">
+                            <div class="timeline-date">Automated Routing</div>
+                            <div>Assigned to nearest verified NGO.</div>
+                        </div>
+                    `;
+                }
+
+                if (incident.status === 'resolved') {
+                    timeline.innerHTML += `
+                        <div class="timeline-item">
+                            <div class="timeline-date">Resolution</div>
+                            <div>NGO marked the incident as Resolved and closed the case.</div>
+                        </div>
+                    `;
+                }
+
+                if (incident.status === 'duplicate') {
+                    timeline.innerHTML += `
+                        <div class="timeline-item">
+                            <div class="timeline-date">System Action</div>
+                            <div>Marked as duplicate of an existing active incident nearby.</div>
+                        </div>
+                    `;
+                }
+
+                // Socket for realtime
+                const profile = JSON.parse(localStorage.getItem('jeevcare_user'));
+                const socket = io();
+                socket.emit('join_citizen_room', profile._id);
+                socket.on('status_update', (data) => {
+                    // Update if this page's incident got updated
+                    if (data.message.includes("updated")) {
+                        window.location.reload();
+                    }
+                });
+
+            } catch (e) {
+                document.getElementById('titleText').innerText = "Error: " + e.message;
+            }
+        });
+    </script>
+    <script src="/js/layout.js"></script>
+
+    <script>
+        window.Layout.renderAppNav('nav-placeholder', 'Citizen Portal');
+        window.Layout.renderSidebar('sidebar-placeholder', 'citizen', 'history');
+    </script>
+</body>
+
+</html>

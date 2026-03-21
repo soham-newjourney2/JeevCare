@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Bookings | JeevCare Provider</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <style>
+        .tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            color: #6b7280;
+            font-weight: 600;
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 50px;
+            transition: var(--transition-fast);
+        }
+
+        .tab:hover {
+            background: rgba(0, 0, 0, 0.06);
+        }
+
+        .tab.active {
+            background: var(--brand-primary);
+            color: white;
+            box-shadow: 0 4px 12px hsla(145, 63%, 42%, 0.2);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Card styles for bookings */
+        .req-card {
+            background: var(--glass-bg);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .req-card.pending {
+            border-left: 4px solid var(--color-warning);
+        }
+
+        .req-card.confirmed,
+        .req-card.scheduled {
+            border-left: 4px solid var(--color-success);
+        }
+
+        @media (max-width: 768px) {
+            .req-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body class="dash-layout">
+    <div id="nav-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+
+    <main class="dash-main animate-fade-in">
+        <h1 style="font-size: 2.2rem; margin-bottom: 10px;">Service Requests</h1>
+        <p style="color: #6b7280; margin-bottom: 30px;">Manage your physical bookings and virtual tele-triage
+            consultations.</p>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('physical')">Physical Bookings</div>
+            <div class="tab" onclick="switchTab('virtual')">Virtual Tele-Triage</div>
+        </div>
+
+        <div id="physical" class="tab-content active">
+            <div id="loaderPhysical">Fetching physical bookings...</div>
+            <div id="physicalGrid"></div>
+        </div>
+
+        <div id="virtual" class="tab-content">
+            <div id="loaderVirtual">Fetching virtual consultations...</div>
+            <div id="virtualGrid"></div>
+        </div>
+    </main>
+
+    <script src="/js/api.js"></script>
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const profileRes = await window.API.get('/auth/profile');
+                if (profileRes.data.profile && profileRes.data.profile.serviceType === 'shelter') {
+                    const adoptionsNav = document.getElementById('nav-item-adoptions');
+                    if (adoptionsNav) adoptionsNav.style.display = 'flex';
+                }
+            } catch (e) { }
+
+            const loadPhysical = async () => {
+                const tb = document.getElementById('physicalGrid');
+                try {
+                    const res = await window.API.get('/services/bookings');
+                    document.getElementById('loaderPhysical').style.display = 'none';
+                    tb.innerHTML = '';
+                    if (res.data.length === 0) return tb.innerHTML = '<div class="glass-card text-center" style="padding: 40px; color: #6b7280;">No physical bookings found.</div>';
+
+                    res.data.forEach(bk => {
+                        const date = new Date(bk.date).toLocaleDateString();
+                        const client = bk.citizen ? bk.citizen.name : 'Unknown';
+
+                        let actions = '';
+                        if (bk.status === 'pending') {
+                            actions = `
+                                <div style="display: flex; gap: 10px;">
+                                    <button class="btn btn-outline" onclick="updateBk('${bk._id}', 'cancelled')" style="color: var(--color-danger); border-color: var(--color-danger);">Decline</button>
+                                    <button class="btn btn-primary" onclick="updateBk('${bk._id}', 'confirmed')">Accept Booking</button>
+                                </div>
+                            `;
+                        } else if (bk.status === 'confirmed') {
+                            actions = `<button class="btn btn-primary" style="background-color: var(--color-success); border-color: var(--color-success);" onclick="updateBk('${bk._id}', 'completed')">Mark Completed</button>`;
+                        }
+
+                        tb.innerHTML += `
+                        <div class="req-card ${bk.status}">
+                            <div>
+                                <h3 style="margin-bottom: 5px;">${client}</h3>
+                                <p style="color: #6b7280; font-size: 0.95rem; margin-bottom: 8px;">
+                                    <strong>Date:</strong> ${date} at ${bk.timeSlot} &bull; 
+                                    <strong>Service:</strong> <span style="text-transform: capitalize;">${bk.serviceType}</span>
+                                </p>
+                                <p style="font-size: 0.95rem; color: #374151;"><strong>Notes:</strong> ${bk.notes || 'None provided'}</p>
+                                <div style="margin-top: 10px;">
+                                    <span class="status-pill status-${bk.status}">${bk.status.toUpperCase()}</span>
+                                </div>
+                            </div>
+                            <div>
+                                ${actions}
+                            </div>
+                        </div>`;
+                    });
+                } catch (err) {
+                    document.getElementById('loaderPhysical').innerText = 'Error: ' + err.message;
+                }
+            };
+
+            const loadVirtual = async () => {
+                const tb = document.getElementById('virtualGrid');
+                try {
+                    const res = await window.API.get('/teleconsult');
+                    document.getElementById('loaderVirtual').style.display = 'none';
+                    tb.innerHTML = '';
+                    if (res.data.length === 0) return tb.innerHTML = '<div class="glass-card text-center" style="padding: 40px; color: #6b7280;">No virtual consultations found.</div>';
+
+                    res.data.forEach(bk => {
+                        const timeObj = new Date(bk.date + 'T' + bk.timeSlot);
+                        const displayDate = isNaN(timeObj) ? bk.date : timeObj.toLocaleDateString();
+                        const displayTime = isNaN(timeObj) ? bk.timeSlot : timeObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                        const client = bk.citizen ? bk.citizen.name : 'Unknown';
+                        let actions = '';
+                        if (bk.status === 'requested') {
+                            actions = `
+                                <div style="display: flex; gap: 10px;">
+                                    <button class="btn btn-outline" onclick="updateVirtual('${bk._id}', 'cancelled')" style="color: var(--color-danger); border-color: var(--color-danger);">Decline</button>
+                                    <button class="btn btn-primary" onclick="approveVirtual('${bk._id}')">Accept & Add Link</button>
+                                </div>
+                            `;
+                        } else if (bk.status === 'scheduled') {
+                            actions = `
+                                <div style="display: flex; gap: 10px;">
+                                    <a href="${bk.meetingLink}" target="_blank" class="btn btn-outline">Join Call</a>
+                                    <button class="btn btn-primary" style="background-color: var(--color-success); border-color: var(--color-success);" onclick="updateVirtual('${bk._id}', 'completed')">Mark Done</button>
+                                </div>
+                            `;
+                        }
+
+                        tb.innerHTML += `
+                        <div class="req-card ${bk.status === 'requested' ? 'pending' : bk.status}">
+                            <div>
+                                <h3 style="margin-bottom: 5px;">${client}</h3>
+                                <p style="color: #6b7280; font-size: 0.95rem; margin-bottom: 8px;">
+                                    <strong>Date:</strong> ${displayDate} at ${displayTime} &bull; 
+                                    <strong>Animal:</strong> <span style="text-transform: capitalize;">${bk.animalType}</span>
+                                </p>
+                                <p style="font-size: 0.95rem; color: #374151;"><strong>Symptoms:</strong> ${bk.symptoms}</p>
+                                <div style="margin-top: 10px;">
+                                    <span class="status-pill status-${bk.status === 'requested' ? 'pending' : bk.status}">${bk.status.toUpperCase()}</span>
+                                </div>
+                            </div>
+                            <div>
+                                ${actions}
+                            </div>
+                        </div>`;
+                    });
+                } catch (err) {
+                    document.getElementById('loaderVirtual').innerText = 'Error: ' + err.message;
+                }
+            };
+
+            window.updateBk = async (id, status) => {
+                try { await window.API.patch(`/services/bookings/${id}`, { status }); loadPhysical(); }
+                catch (err) { alert('Error: ' + err.message); }
+            };
+
+            window.updateVirtual = async (id, status) => {
+                try { await window.API.patch(`/teleconsult/${id}/status`, { status }); loadVirtual(); }
+                catch (err) { alert('Error: ' + err.message); }
+            };
+
+            window.approveVirtual = async (id) => {
+                const link = prompt("Enter video meeting link (Zoom, Meet, etc):");
+                if (!link) return;
+                try { await window.API.patch(`/teleconsult/${id}/status`, { status: 'scheduled', meetingLink: link }); loadVirtual(); }
+                catch (err) { alert('Error: ' + err.message); }
+            };
+
+            loadPhysical();
+            loadVirtual();
+        });
+    </script>
+    <script src="/js/layout.js"></script>
+    <script>
+        window.Layout.renderAppNav('nav-placeholder', 'Service Provider');
+        window.Layout.renderSidebar('sidebar-placeholder', 'service_provider', 'bookings');
+    </script>
+</body>
+
+</html>

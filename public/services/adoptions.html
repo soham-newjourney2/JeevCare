@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adoptions & Fosters | JeevCare Provider</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <style>
+        .split-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .split-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .app-card,
+        .pet-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body class="dash-layout">
+    <div id="nav-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+
+    <main class="dash-main animate-fade-in">
+        <h1 style="font-size: 2.2rem; margin-bottom: 10px;">Adoptions & Fosters</h1>
+        <p style="color: #6b7280; margin-bottom: 30px;">List animals for adoption and manage applications from citizens.
+        </p>
+
+        <div class="split-layout">
+            <div>
+                <div class="glass-card">
+                    <h2 style="margin-bottom: 20px;">List a Pet</h2>
+                    <form id="addPetForm">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" id="pName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Species</label>
+                            <select id="pSpecies" required>
+                                <option value="Dog">Dog</option>
+                                <option value="Cat">Cat</option>
+                                <option value="Bird">Bird</option>
+                                <option value="Large Animal">Large Animal</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Description & Needs</label>
+                            <textarea id="pDesc" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Create Profile</button>
+                    </form>
+                </div>
+
+                <h2 style="margin-top: 30px; margin-bottom: 15px;">Your Listed Pets</h2>
+                <div id="myPetsContainer">Loading pets...</div>
+            </div>
+
+            <div>
+                <div class="glass-card">
+                    <h2 style="margin-bottom: 20px;">Adoption Applications</h2>
+                    <div id="applicationsContainer">Loading applications...</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            let userId = null;
+            try {
+                const profileRes = await window.API.get('/auth/profile');
+                userId = profileRes.data._id;
+
+                // Show adoptions tab in sidebar if they are a shelter
+                if (profileRes.data.profile && profileRes.data.profile.serviceType === 'shelter') {
+                    const adoptionsNav = document.getElementById('nav-item-adoptions');
+                    if (adoptionsNav) adoptionsNav.style.display = 'flex';
+                }
+            } catch (e) {
+                return window.location.href = '/auth/login.html';
+            }
+
+            loadPets(userId);
+            loadApplications();
+
+            document.getElementById('addPetForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const petData = {
+                    name: document.getElementById('pName').value,
+                    species: document.getElementById('pSpecies').value,
+                    description: document.getElementById('pDesc').value
+                };
+                try {
+                    await window.API.post('/adoptions', petData);
+                    alert("Pet profile created!");
+                    document.getElementById('addPetForm').reset();
+                    loadPets(userId);
+                } catch (err) {
+                    alert("Error creating profile: " + err.message);
+                }
+            });
+
+            async function loadPets(providerId) {
+                const container = document.getElementById('myPetsContainer');
+                try {
+                    const res = await window.API.get(`/adoptions?provider=${providerId}`);
+                    if (res.data.length === 0) {
+                        container.innerHTML = '<p class="text-sm text-gray-500">No pets listed currently.</p>';
+                        return;
+                    }
+                    container.innerHTML = res.data.map(p => `
+                        <div class="pet-card">
+                            <h3 style="margin:0;">${p.name} (${p.species})</h3>
+                            <p class="text-sm mt-1">Status: <strong>${p.status}</strong></p>
+                        </div>
+                    `).join('');
+                } catch (err) {
+                    container.innerHTML = 'Error loading pets.';
+                }
+            }
+
+            async function loadApplications() {
+                const container = document.getElementById('applicationsContainer');
+                try {
+                    const res = await window.API.get('/adoptions/provider/applications');
+                    const apps = res.data.filter(a => a.status === 'pending');
+                    if (apps.length === 0) {
+                        container.innerHTML = '<p class="text-sm text-gray-500">No pending applications.</p>';
+                        return;
+                    }
+                    container.innerHTML = apps.map(a => `
+                        <div class="app-card">
+                            <h4>${a.applicant.name} wants to ${a.applicationType} ${a.pet.name}</h4>
+                            <p class="text-sm mt-2"><strong>Experience:</strong> ${a.experience}</p>
+                            <p class="text-sm"><strong>Home:</strong> ${a.housingType}</p>
+                            <p class="text-sm" style="margin-bottom: 10px;"><strong>Reason:</strong> ${a.reason}</p>
+                            <button class="btn btn-primary" onclick="window.updateApp('${a._id}', 'approved')">Approve</button>
+                            <button class="btn btn-outline" onclick="window.updateApp('${a._id}', 'rejected')">Reject</button>
+                        </div>
+                    `).join('');
+                } catch (err) {
+                    container.innerHTML = 'Error loading applications.';
+                }
+            }
+
+            window.updateApp = async function (id, status) {
+                try {
+                    await window.API.patch(`/adoptions/applications/${id}/status`, { status });
+                    alert("Application " + status);
+                    loadApplications();
+                    loadPets(userId);
+                } catch (err) {
+                    alert("Error: " + err.message);
+                }
+            }
+        });
+    </script>
+    <script src="/js/layout.js"></script>
+    <script>
+        window.Layout.renderAppNav('nav-placeholder', 'Service Provider Portal');
+        window.Layout.renderSidebar('sidebar-placeholder', 'service_provider', 'adoptions');
+    </script>
+</body>
+
+</html>
