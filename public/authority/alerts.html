@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Broadcast Alerts | JeevCare Authority</title>
+    <link rel="stylesheet" href="/css/index.css">
+</head>
+
+<body class="dash-layout">
+
+    <div id="nav-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+
+    <main class="dash-main animate-fade-in">
+        <h1 style="font-size: 2.2rem; margin-bottom: 30px;">Broadcast Emergency Alerts</h1>
+
+        <div class="glass-card" style="max-width: 600px;">
+            <h3>New Alert</h3>
+            <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 20px;">Use this form to instantly broadcast
+                warnings or notices to all citizens in the area.</p>
+
+            <form id="alertForm">
+                <div class="form-group">
+                    <label>Severity Level</label>
+                    <select id="severity" required>
+                        <option value="info">Information</option>
+                        <option value="warning">Warning</option>
+                        <option value="critical">Critical Emergency</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Target Area</label>
+                    <input type="text" id="targetArea" placeholder="e.g., Downtown District or 'All'" value="All"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Message Content</label>
+                    <textarea id="messageText" rows="4" placeholder="Brief and clear instructions..."
+                        required></textarea>
+                </div>
+
+                <div id="formError" class="error-msg"></div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Broadcast Message</button>
+            </form>
+        </div>
+    </main>
+
+    <script src="/js/api.js"></script>
+    <script>
+        document.getElementById('alertForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const errorDiv = document.getElementById('formError');
+            if (errorDiv) errorDiv.style.display = 'none';
+
+            const severity = document.getElementById('severity').value;
+            const targetArea = document.getElementById('targetArea').value;
+            const message = document.getElementById('messageText').value;
+
+            // Prevent empty submissions manually
+            if (!message.trim()) {
+                alert('Please enter a message');
+                return;
+            }
+
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn ? btn.innerText : 'Broadcast Message';
+            if (btn) {
+                btn.innerText = 'Broadcasting...';
+                btn.disabled = true;
+            }
+
+            try {
+                await window.API.post('/authority/broadcast', { severity, targetArea, message });
+                alert('Alert successfully broadcasted!');
+                e.target.reset();
+            } catch (err) {
+                if (errorDiv) {
+                    errorDiv.innerText = err.message || 'Failed to broadcast alert';
+                    errorDiv.style.display = 'block';
+                } else {
+                    alert('Failed to broadcast alert: ' + err.message);
+                }
+            } finally {
+                if (btn) {
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                }
+            }
+        });
+    </script>
+    <script src="/js/layout.js"></script>
+    <script>
+        window.Layout.renderAppNav('nav-placeholder', 'Authority');
+        window.Layout.renderSidebar('sidebar-placeholder', 'authority', 'alerts');
+    </script>
+</body>
+
+</html>
