@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGO Dashboard | JeevCare</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <style>
+        .metric-card {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .metric-number {
+            font-size: 3rem;
+            font-family: var(--font-heading);
+            font-weight: 800;
+            color: var(--brand-primary);
+            margin-bottom: 10px;
+        }
+
+        .metric-label {
+            color: #6b7280;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .alert-box {
+            background: hsla(354, 70%, 54%, 0.1);
+            border: 1px solid hsla(354, 70%, 54%, 0.3);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            color: var(--color-danger);
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="dash-layout">
+
+    <div id="nav-placeholder"></div>
+
+    <div id="sidebar-placeholder"></div>
+
+    <main class="dash-main animate-fade-in">
+        <div id="unverifiedAlert" class="alert-box">
+            ⚠️ Your NGO profile is not yet verified by an Authority. You will not receive automatic case assignments
+            until approved.
+        </div>
+
+        <h1 style="font-size: 2.5rem;">NGO Workspace</h1>
+        <p style="color: #6b7280; margin-bottom: 40px;">Manage routed emergencies and track field operations.</p>
+
+        <div class="grid-3 mb-20">
+            <div class="glass-card metric-card">
+                <div class="metric-number" id="m_pool">0</div>
+                <div class="metric-label">Pending Action (Pool)</div>
+            </div>
+            <div class="glass-card metric-card">
+                <div class="metric-number" id="m_active">0</div>
+                <div class="metric-label">In Progress (Field)</div>
+            </div>
+            <div class="glass-card metric-card">
+                <div class="metric-number" id="m_resolved">0</div>
+                <div class="metric-label">Cases Resolved</div>
+            </div>
+        </div>
+
+        <div class="glass-card" style="margin-top: 40px; background: hsla(207, 90%, 54%, 0.05);">
+            <h3>Real-time Radar Active</h3>
+            <p style="color: #4b5563; font-size: 0.95rem;">You are connected to the central dispatch. If an emergency
+                occurs within your spatial radius, it will appear in the Cases Pool.</p>
+            <a href="/ngo/cases-pool.html" class="btn btn-primary mt-40">View Case Pool</a>
+        </div>
+    </main>
+
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+    <script src="/js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const profile = await window.API.getProfile();
+                document.getElementById('userName').innerText = profile.data.name;
+
+                // Load NGO Profile Data
+                const ngoDataRes = await window.API.get('/ngo/profile');
+                if (!ngoDataRes.data.isVerified) {
+                    document.getElementById('unverifiedAlert').style.display = 'block';
+                }
+
+                // Load case metrics
+                const casesRes = await window.API.get('/ngo/cases');
+                const cases = casesRes.data;
+
+                const pool = cases.filter(c => c.status === 'pending_acceptance').length;
+                const active = cases.filter(c => c.status === 'accepted' && c.incident && c.incident.status === 'in_progress').length;
+                const resolved = cases.filter(c => c.status === 'accepted' && c.incident && (c.incident.status === 'resolved' || c.incident.status === 'closed')).length;
+
+                document.getElementById('m_pool').innerText = pool;
+                document.getElementById('m_active').innerText = active;
+                document.getElementById('m_resolved').innerText = resolved;
+
+                if (pool > 0) {
+                    const pb = document.getElementById('poolBadge');
+                    if (pb) {
+                        pb.innerText = pool;
+                        pb.style.display = 'inline-block';
+                    }
+                }
+
+                // Sockets
+                const socket = io();
+                socket.emit('join_ngo_room', profile.data._id);
+                socket.on('case_assigned', (data) => {
+                    alert(`URGENT: New SOS Case Assigned -> ${data.incident.animalType}`);
+                    window.location.reload();
+                });
+
+            } catch (e) { console.error(e); }
+        });
+    </script>
+    <script src="/js/layout.js"></script>
+
+    <script>
+        window.Layout.renderAppNav('nav-placeholder', 'NGO Portal');
+        window.Layout.renderSidebar('sidebar-placeholder', 'ngo', 'dashboard');
+    </script>
+</body>
+
+</html>

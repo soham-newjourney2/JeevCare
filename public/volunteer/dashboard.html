@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volunteer Hub | JeevCare</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <style>
+        .task-card {
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: var(--transition-fast);
+            background: var(--glass-bg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .task-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--brand-primary);
+        }
+
+        .task-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--brand-primary);
+            opacity: 0;
+            transition: var(--transition-fast);
+        }
+
+        .task-card:hover::before {
+            opacity: 1;
+        }
+
+        .urgency-high {
+            color: white;
+            background: var(--color-danger);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .urgency-normal {
+            color: #4b5563;
+            background: #e5e7eb;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+
+<body class="dash-layout">
+
+    <div id="nav-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+
+    <main class="dash-main animate-fade-in">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px;">
+            <div>
+                <h1 style="font-size: 2.2rem; margin-bottom: 5px;">Volunteer Hub</h1>
+                <p style="color: #6b7280;">Find on-ground tasks matching your skills in your radius.</p>
+            </div>
+            <div style="text-align: right;">
+                <div style="font-size: 1.5rem; font-weight: 700; color: var(--brand-primary);">42</div>
+                <div style="font-size: 0.85rem; color: #6b7280; text-transform: uppercase;">Hours Logged</div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div>
+                <h3 style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                    Opportunities Near You
+                    <span
+                        style="font-size: 0.85rem; color: var(--brand-primary); font-weight: normal; cursor: pointer;">Update
+                        Location 📍</span>
+                </h3>
+
+                <div class="task-card">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span class="urgency-high">Urgent Need</span>
+                        <span style="font-size: 0.85rem; color: #6b7280;">1.2 km away</span>
+                    </div>
+                    <h4 style="font-size: 1.1rem; margin-bottom: 5px;">Transport Injured Dog to Vet</h4>
+                    <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 15px;">Animal Rescue NGO needs a
+                        volunteer with a vehicle to securely transport a dog from the rescue point to City Vet Clinic.
+                    </p>
+                    <button class="btn btn-primary" style="padding: 6px 14px; font-size: 0.85rem;">Claim Task</button>
+                </div>
+
+                <div class="task-card">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span class="urgency-normal">Flexible</span>
+                        <span style="font-size: 0.85rem; color: #6b7280;">3.5 km away</span>
+                    </div>
+                    <h4 style="font-size: 1.1rem; margin-bottom: 5px;">Weekend Shelter Cleaning</h4>
+                    <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 15px;">Help Paws & Claws foundation
+                        sanitize enclosures and feed the resident cats this Saturday morning.</p>
+                    <button class="btn btn-outline" style="padding: 6px 14px; font-size: 0.85rem;">Sign Up</button>
+                </div>
+
+                <div class="task-card">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span class="urgency-normal">Foster Need</span>
+                        <span style="font-size: 0.85rem; color: #6b7280;">City-wide</span>
+                    </div>
+                    <h4 style="font-size: 1.1rem; margin-bottom: 5px;">Temporary Foster for 3 Kittens</h4>
+                    <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 15px;">Looking for an experienced foster
+                        home for 3 orphaned kittens for approx 2 weeks until they are weaned.</p>
+                    <button class="btn btn-outline" style="padding: 6px 14px; font-size: 0.85rem;">Learn More</button>
+                </div>
+            </div>
+
+            <div>
+                <div class="glass-card" style="margin-bottom: 20px;">
+                    <h3 style="margin-bottom: 15px;">My Active Tasks</h3>
+
+                    <div
+                        style="background: rgba(0,0,0,0.02); border: 1px dashed #ccc; padding: 20px; border-radius: 8px; text-align: center;">
+                        <p style="color: #6b7280; font-size: 0.9rem;">You have no active commitments right now. Pick up
+                            a task to help the community!</p>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <h3 style="margin-bottom: 15px;">Volunteer Training & Guidelines</h3>
+                    <ul style="list-style-type: none; padding: 0;">
+                        <li
+                            style="margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--glass-border);">
+                            <a href="#" style="color: var(--brand-primary); font-weight: 500;">📖 Basic Animal First Aid
+                                Handout</a>
+                        </li>
+                        <li
+                            style="margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--glass-border);">
+                            <a href="#" style="color: var(--brand-primary); font-weight: 500;">📹 Video: How to safely
+                                approach a stray</a>
+                        </li>
+                        <li>
+                            <a href="#" style="color: var(--brand-primary); font-weight: 500;">📋 Code of Conduct for
+                                Volunteers</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/layout.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            window.Layout.renderAppNav('nav-placeholder', 'Volunteer Portal');
+            window.Layout.renderSidebar('sidebar-placeholder', 'volunteer', 'dashboard');
+        });
+    </script>
+</body>
+
+</html>

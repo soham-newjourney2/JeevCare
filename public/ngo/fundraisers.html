@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign Manager | JeevCare NGO</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <style>
+        .campaign-card {
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar-bg {
+            background: #e5e7eb;
+            border-radius: 50px;
+            height: 10px;
+            width: 100%;
+            margin: 15px 0 5px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background: var(--brand-primary);
+            height: 100%;
+            border-radius: 50px;
+            transition: width 1s ease-in-out;
+        }
+
+        .campaign-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body class="dash-layout">
+
+    <div id="nav-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+
+    <main class="dash-main animate-fade-in">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <h1 style="font-size: 2.2rem; margin-bottom: 0;">Campaign Manager</h1>
+            <button class="btn btn-primary" onclick="openCreateModal()">+ Create Fundraiser</button>
+        </div>
+
+        <div id="loader">Loading your active campaigns...</div>
+        <div id="campaignsContainer" class="grid-2" style="display: none;">
+            <!-- Rendered via JS -->
+        </div>
+    </main>
+
+    <!-- Create Campaign Modal -->
+    <div id="createModal" class="modal-overlay">
+        <div class="glass-card" style="width: 100%; max-width: 500px;">
+            <h2 style="margin-bottom: 20px;">Launch Emergency Fundraiser</h2>
+
+            <form id="campaignForm">
+                <div class="form-group">
+                    <label class="form-label">Campaign Title</label>
+                    <input type="text" id="campTitle" class="form-input"
+                        placeholder="e.g., Surgery for Injured Stray Dog" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Description (Why are funds needed?)</label>
+                    <textarea id="campDesc" class="form-input" rows="3"
+                        placeholder="Explain the situation and how the funds will be utilized..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Target Amount (INR)</label>
+                    <input type="number" id="campTarget" class="form-input" placeholder="e.g., 15000" min="500"
+                        required>
+                </div>
+
+                <!-- Optional: We could dynamically populate active cases owned by this NGO here -->
+                <div class="form-group">
+                    <label class="form-label">Link to specific Case ID (Optional)</label>
+                    <input type="text" id="campCase" class="form-input" placeholder="Paste Case ID if applicable">
+                </div>
+
+                <div id="modalError" class="error-msg" style="display: none;"></div>
+
+                <div style="display: flex; gap: 10px; margin-top: 25px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;" id="submitBtn">Launch
+                        Campaign</button>
+                    <button type="button" class="btn btn-outline" onclick="closeCreateModal()"
+                        style="flex: 1;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const container = document.getElementById('campaignsContainer');
+            const loader = document.getElementById('loader');
+
+            const loadMyCampaigns = async () => {
+                try {
+                    const res = await window.API.get('/donations');
+                    const campaigns = res.data;
+
+                    loader.style.display = 'none';
+                    container.style.display = 'grid';
+                    container.innerHTML = '';
+
+                    if (campaigns.length === 0) {
+                        container.innerHTML = '<div class="glass-card text-center" style="grid-column: span 2;"><h3>No Active Campaigns</h3><p>You have not launched any fundraisers yet.</p></div>';
+                        return;
+                    }
+
+                    campaigns.forEach(camp => {
+                        const percent = Math.min(100, (camp.currentAmount / camp.targetAmount) * 100);
+
+                        const el = document.createElement('div');
+                        el.className = 'glass-card campaign-card';
+                        el.innerHTML = `
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                                <h3 style="font-size: 1.2rem; margin-bottom: 5px;">${camp.title}</h3>
+                                <span class="status-pill status-${camp.status === 'active' ? 'assigned' : 'resolved'}" style="font-size: 0.75rem;">${camp.status.toUpperCase()}</span>
+                            </div>
+                            <p style="font-size: 0.9rem; color: #4b5563; margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${camp.description}</p>
+                            
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" style="width: ${percent}%;"></div>
+                            </div>
+                            <div class="campaign-stats">
+                                <span>₹${camp.currentAmount.toLocaleString()} Raised</span>
+                                <span>Goal: ₹${camp.targetAmount.toLocaleString()}</span>
+                            </div>
+                        `;
+                        container.appendChild(el);
+                    });
+
+                } catch (e) {
+                    loader.innerText = "Error loading campaigns: " + e.message;
+                }
+            };
+
+            window.openCreateModal = () => {
+                document.getElementById('createModal').style.display = 'flex';
+            };
+
+            window.closeCreateModal = () => {
+                document.getElementById('createModal').style.display = 'none';
+                document.getElementById('campaignForm').reset();
+                document.getElementById('modalError').style.display = 'none';
+            };
+
+            document.getElementById('campaignForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const errBox = document.getElementById('modalError');
+                const btn = document.getElementById('submitBtn');
+
+                btn.innerText = 'Creating...';
+                btn.disabled = true;
+
+                try {
+                    const payload = {
+                        title: document.getElementById('campTitle').value,
+                        description: document.getElementById('campDesc').value,
+                        targetAmount: Number(document.getElementById('campTarget').value)
+                    };
+
+                    const caseId = document.getElementById('campCase').value;
+                    if (caseId) payload.relatedCase = caseId;
+
+                    await window.API.post('/donations', payload);
+
+                    closeCreateModal();
+                    loadMyCampaigns(); // refresh list
+                } catch (err) {
+                    errBox.innerText = err.message;
+                    errBox.style.display = 'block';
+                } finally {
+                    btn.innerText = 'Launch Campaign';
+                    btn.disabled = false;
+                }
+            });
+
+            loadMyCampaigns();
+        });
+    </script>
+    <script src="/js/layout.js"></script>
+    <script>
+        window.Layout.renderAppNav('nav-placeholder', 'Rescue NGO Portal');
+        window.Layout.renderSidebar('sidebar-placeholder', 'ngo', 'fundraisers');
+    </script>
+</body>
+
+</html>

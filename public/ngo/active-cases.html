@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active Cases | JeevCare</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <style>
+        .case-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            padding: 24px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 20px;
+            border-left: 5px solid var(--color-warning);
+        }
+
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .meta {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body class="dash-layout">
+
+    <div id="nav-placeholder"></div>
+
+    <div id="sidebar-placeholder"></div>
+
+    <main class="dash-main animate-fade-in">
+        <h1 style="font-size: 2.2rem; margin-bottom: 10px;">Active Field Cases</h1>
+        <p style="color: #6b7280; margin-bottom: 30px;">Manage cases currently marked as "in progress" by your team.</p>
+
+        <div id="loader">Loading active operations...</div>
+        <div id="activeContainer" style="display: none;"></div>
+
+        <div id="emptyState" class="glass-card text-center" style="display: none; padding: 60px;">
+            <div style="font-size: 3rem; margin-bottom: 20px;">🏥</div>
+            <h3>No Active Field Ops</h3>
+            <p style="color: #6b7280;">You don't have any cases currently marked as in-progress.</p>
+        </div>
+    </main>
+
+    <script src="/js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const container = document.getElementById('activeContainer');
+            const loader = document.getElementById('loader');
+            const emptyState = document.getElementById('emptyState');
+
+            try {
+                const res = await window.API.get('/ngo/cases');
+                // accepted assignments change case status to in_progress
+                const activeCases = res.data.filter(c => c.status === 'accepted' && c.incident && c.incident.status === 'in_progress');
+
+                loader.style.display = 'none';
+
+                if (activeCases.length === 0) {
+                    emptyState.style.display = 'block';
+                    return;
+                }
+
+                container.style.display = 'block';
+                activeCases.forEach(c => {
+                    const el = document.createElement('div');
+                    el.className = 'case-card';
+                    el.innerHTML = `
+                        <div class="header-bar">
+                            <div>
+                                <h3 style="margin:0;">${c.incident?.animalType || 'Unknown'} - ${c.incident?.concernType || 'Unknown'}</h3>
+                                <div class="meta" style="margin-top:8px;"><strong>Location:</strong> Lat ${c.incident?.location?.coordinates[1]?.toFixed(5) || 0}, Lng ${c.incident?.location?.coordinates[0]?.toFixed(5) || 0}</div>
+                            </div>
+                            <button onclick="markResolved('${c._id}')" class="btn btn-primary" style="background-color: var(--color-success); border-color: var(--color-success);">Mark as Resolved</button>
+                        </div>
+                    `;
+                    container.appendChild(el);
+                });
+
+            } catch (e) {
+                loader.innerText = "Error: " + e.message;
+            }
+        });
+
+        async function markResolved(assignmentId) {
+            if (!confirm("Are you sure you want to mark this operation as fully resolved?")) return;
+            try {
+                await window.API.patch(`/ngo/cases/${assignmentId}/status`, {
+                    status: 'resolved',
+                    note: 'Case successfully resolved by NGO'
+                });
+                alert("Case marked as resolved!");
+                window.location.reload();
+            } catch (e) {
+                alert("Failed to mark resolved: " + e.message);
+            }
+        }
+    </script>
+    <script src="/js/layout.js"></script>
+
+    <script>
+        window.Layout.renderAppNav('nav-placeholder', 'NGO Portal');
+        window.Layout.renderSidebar('sidebar-placeholder', 'ngo', 'active');
+    </script>
+</body>
+
+</html>
