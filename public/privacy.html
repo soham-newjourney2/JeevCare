@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | JeevCare</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <style>
+        .legal-content {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 50px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid #eee;
+        }
+
+        .legal-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .legal-content h2 {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            margin-top: 40px;
+            border-bottom: 2px solid #f3f4f6;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .legal-content p,
+        .legal-content li {
+            color: #4b5563;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .legal-content ul {
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        .last-updated {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            margin-bottom: 40px;
+        }
+
+        .highlight-box {
+            background: rgba(16, 185, 129, 0.05);
+            border-left: 4px solid var(--brand-primary);
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 0 8px 8px 0;
+        }
+    </style>
+</head>
+
+<body class="pt-100" style="background-color: #f9fafb;">
+
+    <div id="nav-placeholder"></div>
+
+    <main class="container animate-fade-in" style="padding-top: 40px; padding-bottom: 80px;">
+        <div class="legal-content">
+            <h1>Privacy Policy</h1>
+            <div class="last-updated">Last Updated: October 24, 2025</div>
+
+            <p>At JeevCare, protecting your privacy and the data relating to civic animal rescues is our highest
+                priority. This Privacy Policy explains how we collect, use, disclose, and safeguard your information
+                when you visit our website or use our application.</p>
+
+            <div class="highlight-box">
+                <strong>Our Core Commitment:</strong> We never sell your personal data. The data collected is strictly
+                used to facilitate rapid emergency responses, verify organizations, and improve civic analytics.
+            </div>
+
+            <h2>1. Information We Collect</h2>
+            <ul>
+                <li><strong>Personal Data:</strong> Name, email address, phone number, and physical addresses (if saved
+                    in your profile).</li>
+                <li><strong>Location Data:</strong> When you report an emergency, we collect precise GPS coordinates
+                    (GeoJSON 2dsphere points) from your browser/device to accurately route the distress signal to the
+                    nearest NGO.</li>
+                <li><strong>Organization Data:</strong> For NGOs and Services, we collect registration numbers,
+                    licenses, operating capacity, and banking info (for the donor module).</li>
+                <li><strong>Media:</strong> Photos or videos uploaded as part of an emergency report.</li>
+            </ul>
+
+            <h2>2. How We Use Your Information</h2>
+            <p>We use the information we collect in the following ways:</p>
+            <ul>
+                <li>To rapidly dispatch verified NGOs to exact incident locations.</li>
+                <li>To facilitate direct communication (in-app chat) between the reporting citizen and the assigned NGO.
+                </li>
+                <li>To generate anonymized "heatmaps" and analytics for Municipal Authorities.</li>
+                <li>To prevent abuse, spam, and fraudulent reporting across the network.</li>
+            </ul>
+
+            <h2>3. Information Sharing with Third Parties</h2>
+            <p>JeevCare operates as a hub. We share necessary data (like the emergency location, description, and your
+                contact number) with the specific **verified NGO** that accepts your case to ensure they can find the
+                animal. Aggregated, anonymized data (stripped of personal identifiers) may be shared with municipal
+                authorities or academic researchers via our Open Data portal.</p>
+
+            <h2>4. Data Security</h2>
+            <p>We implement robust, enterprise-grade security measures designed to protect your information. This
+                includes military-grade bcrypt password hashing, JSON Web Tokens (JWT) for secure session management,
+                and encrypted database connections. However, no electronic transmission over the internet or information
+                storage technology can be guaranteed to be 100% secure.</p>
+
+            <h2>5. Your Rights</h2>
+            <p>Depending on your jurisdiction, you may have the right to request access to the personal data we hold
+                about you, request corrections, or request deletion ("Right to be Forgotten"). You can manage these
+                preferences directly in your `Settings > Privacy` dashboard or by contacting privacy@jeevcare.org.</p>
+        </div>
+    </main>
+
+    <script src="/js/layout.js"></script>
+    <script>window.Layout.renderPublicNav('nav-placeholder', '');</script>
+</body>
+
+</html>

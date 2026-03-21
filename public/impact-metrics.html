@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impact Metrics | JeevCare</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <style>
+        .impact-hero {
+            text-align: center;
+            background: linear-gradient(135deg, hsl(210, 30%, 96%) 0%, hsl(152, 68%, 95%) 100%);
+            padding: 100px 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .number-huge {
+            font-size: 4rem;
+            font-family: var(--font-heading);
+            color: var(--brand-primary);
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .chart-placeholder {
+            height: 300px;
+            background: #f9fafb;
+            border-radius: var(--border-radius);
+            border: 2px dashed #d1d5db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body class="pt-100">
+
+    <div id="nav-placeholder"></div>
+
+    <header class="impact-hero animate-fade-in">
+        <h1 class="hero-title" style="margin-bottom: 20px;">Platform Impact</h1>
+        <p class="hero-subtitle">Real-time tracking of civic animal welfare metrics across our network.</p>
+    </header>
+
+    <main class="container animate-fade-in" style="padding-top: 60px; padding-bottom: 80px;">
+        <div class="grid-3 mb-20">
+            <div class="glass-card text-center">
+                <div class="number-huge" id="count_cases">8,942</div>
+                <div class="metric-label">Total Emergencies Resolved</div>
+            </div>
+            <div class="glass-card text-center">
+                <div class="number-huge" id="count_ngo">145</div>
+                <div class="metric-label">Verified NGO Partners</div>
+            </div>
+            <div class="glass-card text-center">
+                <div class="number-huge" id="count_time">14m</div>
+                <div class="metric-label">Avg. Response Time</div>
+            </div>
+        </div>
+
+        <div class="grid-2 mt-40">
+            <div class="glass-card">
+                <h3>Incidents by Region (YTD)</h3>
+                <div class="chart-placeholder">Chart.js Render Area</div>
+            </div>
+            <div class="glass-card">
+                <h3>Species Breakdown</h3>
+                <div class="chart-placeholder">Chart.js Render Area</div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/js/layout.js"></script>
+    <script>window.Layout.renderPublicNav('nav-placeholder', '');</script>
+</body>
+
+</html>
