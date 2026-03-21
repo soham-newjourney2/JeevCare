@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="JeevCare - Empowering Citizens and NGOs to save distressed animals.">
+    <title>JeevCare | Smart Civic Web Platform</title>
+    <!-- Keep global styles -->
+    <link rel="stylesheet" href="/css/index.css">
+
+    <style>
+        /* Advanced Landing Page Theme Overrides - Spotify/YouTube Hybrid Glossy Look */
+        :root {
+            --bg-dark: #09090b;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --brand-primary-glow: hsla(152, 68%, 45%, 0.4);
+            --brand-accent: #8b5cf6;
+            /* Deep purple */
+            --brand-accent-glow: rgba(139, 92, 246, 0.4);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --glass-blur: blur(20px);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* Override general headings for dark mode */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+            color: var(--text-main);
+        }
+
+        /* Update Navbar for dark theme on homepage */
+        .navbar {
+            background: rgba(9, 9, 11, 0.7);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: var(--brand-primary);
+            text-shadow: 0 0 10px var(--brand-primary-glow);
+        }
+
+        /* Hero Section Scoped Styles */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: transparent;
+            padding-top: 80px;
+            transform-style: preserve-3d;
+            perspective: 2000px;
+        }
+
+        /* Abstract glowing blobs for premium feel */
+        .hero::before,
+        .hero::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.5;
+            z-index: -1;
+            animation: float 15s ease-in-out infinite alternate;
+        }
+
+        .hero::before {
+            top: 20%;
+            left: -10%;
+            width: 40vw;
+            height: 40vw;
+            background: var(--brand-primary-glow);
+        }
+
+        .hero::after {
+            bottom: -10%;
+            right: -10%;
+            width: 35vw;
+            height: 35vw;
+            background: var(--brand-accent-glow);
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) scale(1) translateZ(-100px);
+            }
+
+            100% {
+                transform: translate(50px, -50px) scale(1.1) translateZ(-100px);
+            }
+        }
+
+        /* 3D Image Slider Overkill Style */
+        .slider-3d-container {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            perspective: 1500px;
+            z-index: 0;
+            /* Behind content but above orbs */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            pointer-events: none;
+            /* Let clicks pass through to buttons */
+            opacity: 0.4;
+            /* Subtle backdrop blending */
+        }
+
+        .slider-3d-track {
+            position: relative;
+            width: 350px;
+            height: 450px;
+            transform-style: preserve-3d;
+            animation: carousel-spin 25s infinite linear;
+        }
+
+        .slider-3d-item {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+            -webkit-box-reflect: below 20px linear-gradient(transparent, transparent, rgba(0, 0, 0, 0.4));
+            transition: all 0.5s ease;
+        }
+
+        /* 5 Images arranged in a 3D ring (360/5 = 72 deg spacing) */
+        .slider-3d-item:nth-child(1) {
+            transform: rotateY(0deg) translateZ(450px);
+            background-image: url('https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=600&q=80');
+        }
+
+        .slider-3d-item:nth-child(2) {
+            transform: rotateY(72deg) translateZ(450px);
+            background-image: url('https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=600&q=80');
+        }
+
+        .slider-3d-item:nth-child(3) {
+            transform: rotateY(144deg) translateZ(450px);
+            background-image: url('https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=600&q=80');
+        }
+
+        .slider-3d-item:nth-child(4) {
+            transform: rotateY(216deg) translateZ(450px);
+            background-image: url('https://images.unsplash.com/photo-1501820488136-72669149e0d4?auto=format&fit=crop&w=600&q=80');
+        }
+
+        .slider-3d-item:nth-child(5) {
+            transform: rotateY(288deg) translateZ(450px);
+            background-image: url('https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80');
+        }
+
+        @keyframes carousel-spin {
+            from {
+                transform: rotateY(360deg);
+            }
+
+            to {
+                transform: rotateY(0deg);
+            }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 900px;
+            padding: 0 20px;
+            transform: translateZ(100px);
+            /* Push further out to avoid intersection with ring */
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-subtle);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: var(--brand-primary);
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-title {
+            font-size: 5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 30px;
+            letter-spacing: -2px;
+            background: linear-gradient(to right, #ffffff, #a1a1aa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-title span {
+            background: linear-gradient(45deg, var(--brand-primary), #34d399);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 50px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.8;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .btn-modern {
+            padding: 16px 36px;
+            border-radius: 50px;
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-primary-glow {
+            background: var(--brand-primary);
+            color: #000;
+            box-shadow: 0 0 20px var(--brand-primary-glow), inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-primary-glow:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 30px var(--brand-primary-glow), inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+            color: #000;
+        }
+
+        .btn-outline-glow {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-main);
+            border: 1px solid var(--border-subtle);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-outline-glow:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+            color: #fff;
+        }
+
+        /* Features Section - Floating Windows */
+        .features {
+            padding: 140px 0;
+            position: relative;
+            z-index: 2;
+            background: #09090b;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 100px;
+        }
+
+        .section-header h2 {
+            font-size: 3.5rem;
+            letter-spacing: -1px;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 1.25rem;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        /* 3D Floating Mac Window Container */
+        .mac-window {
+            background: rgba(20, 20, 25, 0.6);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            animation: float-y 6s ease-in-out infinite;
+        }
+
+        .mac-window:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .mac-window:nth-child(2) {
+            animation-delay: -2s;
+        }
+
+        .mac-window:nth-child(3) {
+            animation-delay: -4s;
+        }
+
+        @keyframes float-y {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .mac-window:hover {
+            animation-play-state: paused;
+            transform: translateY(-20px) scale(1.03);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 40px 60px -15px rgba(0, 0, 0, 0.9), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+            z-index: 10;
+        }
+
+        /* Unique Glows per Window Hover */
+        .mac-window:nth-child(1):hover {
+            box-shadow: 0 40px 60px -15px rgba(0, 0, 0, 0.9), 0 0 30px var(--brand-primary-glow);
+        }
+
+        .mac-window:nth-child(2):hover {
+            box-shadow: 0 40px 60px -15px rgba(0, 0, 0, 0.9), 0 0 30px var(--brand-accent-glow);
+        }
+
+        .mac-window:nth-child(3):hover {
+            box-shadow: 0 40px 60px -15px rgba(0, 0, 0, 0.9), 0 0 30px rgba(6, 182, 212, 0.4);
+            /* Cyan glow */
+        }
+
+        .window-header {
+            background: rgba(10, 10, 12, 0.8);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .window-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot.red {
+            background: #ff5f56;
+            box-shadow: 0 0 5px #ff5f56;
+        }
+
+        .dot.yellow {
+            background: #ffbd2e;
+            box-shadow: 0 0 5px #ffbd2e;
+        }
+
+        .dot.green {
+            background: #27c93f;
+            box-shadow: 0 0 5px #27c93f;
+        }
+
+        .window-title-bar {
+            margin-left: auto;
+            margin-right: auto;
+            color: #666;
+            font-size: 0.85rem;
+            font-family: monospace;
+            padding-right: 44px;
+            /* Offset to center text visually considering the dots left side */
+        }
+
+        .window-content {
+            padding: 40px 30px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, transparent 100%);
+        }
+
+        .feature-icon-wrapper {
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02);
+            transition: all 0.3s ease;
+        }
+
+        /* Specific icon colors */
+        .mac-window:nth-child(1) .feature-icon-wrapper {
+            color: var(--brand-primary);
+            text-shadow: 0 0 10px var(--brand-primary-glow);
+        }
+
+        .mac-window:nth-child(2) .feature-icon-wrapper {
+            color: var(--brand-accent);
+            text-shadow: 0 0 10px var(--brand-accent-glow);
+        }
+
+        .mac-window:nth-child(3) .feature-icon-wrapper {
+            color: #06b6d4;
+            text-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+        }
+
+        .mac-window:hover .feature-icon-wrapper {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .window-content h3 {
+            font-size: 1.6rem;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .window-content p {
+            color: var(--text-muted);
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        /* Ecosystem Statistics */
+        .stats-banner {
+            border-top: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-subtle);
+            background: rgba(255, 255, 255, 0.02);
+            padding: 60px 0;
+            margin: 40px 0 80px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            font-family: var(--font-heading);
+            background: linear-gradient(135deg, var(--brand-primary), #10b981);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 500;
+        }
+
+        /* Call to Action Footer Pre */
+        .cta-section {
+            padding: 100px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, rgba(20, 20, 25, 0.8), rgba(10, 10, 15, 0.9));
+            border: 1px solid var(--border-subtle);
+            border-radius: 30px;
+            padding: 80px 40px;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-box::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, var(--brand-accent-glow) 0%, transparent 70%);
+            transform: translateX(-50%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-content h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-content p {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Custom Footer override */
+        .footer-dark {
+            background: #000;
+            border-top: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            padding: 60px 0 40px;
+        }
+
+        .footer-logo {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .footer-logo span {
+            color: var(--brand-primary);
+        }
+
+        @media (max-width: 1024px) {
+
+            .grid-3,
+            .floating-windows-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+
+            .nav-links {
+                display: none;
+                /* Mobile menu takes over */
+            }
+
+            .hero-title {
+                font-size: 3.2rem;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+            }
+
+            .stat-number {
+                font-size: 2.5rem;
+            }
+
+            .cta-content h2 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Top Navigation -->
+    <div id="nav-placeholder"></div>
+
+    <!-- Hero Section -->
+    <header class="hero animate-fade-in">
+
+        <!-- Overkill 3D Slider Background -->
+        <div class="slider-3d-container">
+            <div class="slider-3d-track">
+                <div class="slider-3d-item"></div>
+                <div class="slider-3d-item"></div>
+                <div class="slider-3d-item"></div>
+                <div class="slider-3d-item"></div>
+                <div class="slider-3d-item"></div>
+            </div>
+        </div>
+
+        <div class="container hero-content">
+            <div class="hero-badge">JeevCare Platform</div>
+            <h1 class="hero-title">Intelligent Civic Ecosystem for <span>Animal Rescue</span></h1>
+            <p class="hero-subtitle">Experience a state-of-the-art platform connecting citizens, NGOs, and authorities
+                instantly. Report emergencies, track resolutions, and build trust in a unified system.</p>
+            <div class="hero-actions">
+                <a href="/auth/register-citizen.html" class="btn-modern btn-primary-glow">
+                    Try the Platform
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </a>
+                <a href="/about.html" class="btn-modern btn-outline-glow">
+                    View Architecture
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Stats Banner -->
+    <div class="stats-banner">
+        <div class="container grid-3">
+            <div class="stat-item">
+                <div class="stat-number">Real-time</div>
+                <div class="stat-label">Socket Event Push</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">&lt; 1s</div>
+                <div class="stat-label">Geo-Routing Latency</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Verified NGO Network</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Engineered for Scale</h2>
+                <p>JeevCare is built on a robust, asynchronous architecture ensuring critical data reaches the right
+                    responders exactly when it matters.</p>
+            </div>
+
+            <div class="floating-windows-grid animate-fade-in" style="animation-delay: 0.2s;">
+
+                <!-- Window 1 -->
+                <div class="mac-window">
+                    <div class="window-header">
+                        <div class="window-dots">
+                            <div class="dot red"></div>
+                            <div class="dot yellow"></div>
+                            <div class="dot green"></div>
+                        </div>
+                        <div class="window-title-bar">geo-routing.js</div>
+                    </div>
+                    <div class="window-content">
+                        <div class="feature-icon-wrapper">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+                                <path d="M2 12h20" />
+                            </svg>
+                        </div>
+                        <h3>Smart Geo-Routing</h3>
+                        <p>Our intelligent algorithms parse GPS coordinates to instantly match the closest verified,
+                            available NGO to intercept incoming emergency cases.</p>
+                    </div>
+                </div>
+
+                <!-- Window 2 -->
+                <div class="mac-window">
+                    <div class="window-header">
+                        <div class="window-dots">
+                            <div class="dot red"></div>
+                            <div class="dot yellow"></div>
+                            <div class="dot green"></div>
+                        </div>
+                        <div class="window-title-bar">trust-model.ts</div>
+                    </div>
+                    <div class="window-content">
+                        <div class="feature-icon-wrapper">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                            </svg>
+                        </div>
+                        <h3>Immutable Trust Model</h3>
+                        <p>Powered by hierarchical authorities and dynamic user Trust Scores to prevent spoofing,
+                            incentivize genuine reporting, and ensure accountability.</p>
+                    </div>
+                </div>
+
+                <!-- Window 3 -->
+                <div class="mac-window">
+                    <div class="window-header">
+                        <div class="window-dots">
+                            <div class="dot red"></div>
+                            <div class="dot yellow"></div>
+                            <div class="dot green"></div>
+                        </div>
+                        <div class="window-title-bar">websocket.go</div>
+                    </div>
+                    <div class="window-content">
+                        <div class="feature-icon-wrapper">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                            </svg>
+                        </div>
+                        <h3>Bi-directional Sync</h3>
+                        <p>Fluid, real-time interface built with WebSocket integrations. Changes made by NGOs
+                            immediately sync to the citizen's tracking portal without refreshes.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Pre-footer CTA -->
+    <section class="cta-section container">
+        <div class="cta-box">
+            <div class="cta-content">
+                <h2>Join the Civic Network</h2>
+                <p>Register as a citizen to start reporting, or onboard your NGO to receive real-time cases and manage
+                    your capacity.</p>
+                <div class="hero-actions" style="margin-top: 30px;">
+                    <a href="/auth/register-ngo.html" class="btn-modern btn-primary-glow">Register NGO</a>
+                    <a href="/auth/login.html" class="btn-modern btn-outline-glow">Sign In</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <!-- <footer class="footer-dark text-center">
+        <div class="container">
+            <div class="footer-logo">Jeev<span>Care</span></div>
+            <p>&copy; 2026 JeevCare Advanced Civic Ecosystem. All Rights Reserved.</p>
+        </div>
+    </footer> -->
+
+    <!-- Utilities -->
+    <script src="/js/api.js"></script>
+    <script>
+        // Check if user is already logged in, redirect them seamlessly
+        document.addEventListener("DOMContentLoaded", () => {
+            if (window.API && window.API.getToken()) {
+                window.API.getProfile()
+                    .then(res => {
+                        console.log("Auto-redirecting logged in user");
+                        window.API.redirectByRole(res.data.role);
+                    })
+                    .catch(() => window.API.logout());
+            }
+
+            // --- INSANE OVERKILL 3D TILT EFFECT ---
+            const cards = document.querySelectorAll('.mac-window');
+
+            cards.forEach(card => {
+                const wrapper = card.querySelector('.feature-icon-wrapper');
+
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left; // x position within the element
+                    const y = e.clientY - rect.top;  // y position within the element
+
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+
+                    const rotateX = ((y - centerY) / centerY) * -15; // Max rotation 15deg
+                    const rotateY = ((x - centerX) / centerX) * 15;
+
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05) translateY(-20px)`;
+
+                    // Dynamic glow effect following mouse
+                    card.style.background = `
+                        radial-gradient(circle at ${x}px ${y}px, rgba(255,255,255,0.08) 0%, rgba(20,20,25,0.6) 50%)
+                    `;
+
+                    if (wrapper) {
+                        wrapper.style.transform = `translateZ(40px) rotateX(${-rotateX}deg) rotateY(${-rotateY}deg) scale(1.1)`;
+                        wrapper.style.boxShadow = `${-rotateY}px ${rotateX}px 30px rgba(0,0,0,0.5)`;
+                    }
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1) translateY(0px)`;
+                    card.style.background = `rgba(20, 20, 25, 0.6)`;
+                    if (wrapper) {
+                        wrapper.style.transform = `translateZ(0px) scale(1)`;
+                        wrapper.style.boxShadow = `inset 0 0 20px rgba(255,255,255,0.02)`;
+                    }
+                });
+            });
+
+            // --- PARALLAX TEXT ON MOUSE MOVE ---
+            const hero = document.querySelector('.hero');
+            const heroContent = document.querySelector('.hero-content');
+
+            if (hero && heroContent) {
+                hero.addEventListener('mousemove', e => {
+                    const xAxis = (window.innerWidth / 2 - e.pageX) / 50;
+                    const yAxis = (window.innerHeight / 2 - e.pageY) / 50;
+                    heroContent.style.transform = `translateZ(50px) rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+                });
+
+                hero.addEventListener('mouseleave', () => {
+                    heroContent.style.transform = `translateZ(50px) rotateY(0deg) rotateX(0deg)`;
+                });
+            }
+        });
+    </script>
+    <script src="/js/layout.js"></script>
+    <script>window.Layout.renderPublicNav('nav-placeholder', 'home');</script>
+</body>
+
+</html>

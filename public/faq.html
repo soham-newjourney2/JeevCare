@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ | JeevCare</title>
+    <!-- Core styles -->
+    <link rel="stylesheet" href="/css/index.css">
+    <style>
+        .faq-item {
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-answer {
+            color: var(--text-muted);
+            line-height: 1.7;
+            display: none;
+            padding-top: 15px;
+            margin-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        .faq-item.active .faq-question {
+            color: var(--brand-primary);
+        }
+
+        .faq-icon {
+            font-size: 1.5rem;
+            color: var(--brand-primary);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="nav-placeholder"></div>
+
+    <header class="page-header animate-fade-in">
+        <h1 class="page-title">Frequently Asked Questions</h1>
+        <p class="page-subtitle">Everything you need to know about the platform and reporting.</p>
+    </header>
+
+    <main class="container">
+        <section class="animate-fade-in" style="animation-delay: 0.1s; max-width: 800px; margin: 0 auto 120px;">
+            <div class="glass-card faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question">How does the routing algorithm work? <span class="faq-icon">+</span></div>
+                <div class="faq-answer">JeevCare uses a spatial <code>$nearSphere</code> database query. When you report
+                    an incident with
+                    a location, we instantly query all verified NGOs within a 10km radius. We then factor in their
+                    current
+                    active caseloads to assign the case to the most available and closest responder.</div>
+            </div>
+
+            <div class="glass-card faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question">Can I report anonymously? <span class="faq-icon">+</span></div>
+                <div class="faq-answer">Yes. You do not need to register to report an emergency. However, registered
+                    Citizens earn Trust Scores for valid reports, prioritizing their tickets automatically in the queue.
+                </div>
+            </div>
+
+            <div class="glass-card faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question">How are duplicate reports handled? <span class="faq-icon">+</span></div>
+                <div class="faq-answer">We employ a robust duplication mechanism. If a report is made for the same
+                    animal
+                    type within a 2km radius inside a 6-hour window, the new report is automatically merged into the
+                    master
+                    assignment timeline, reducing spam.</div>
+            </div>
+
+            <div class="glass-card faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question">How can my NGO join? <span class="faq-icon">+</span></div>
+                <div class="faq-answer">Click 'Join Network' and register under the NGO role. You must provide a valid
+                    registration number. A local authority will audit your profile and toggle your 'Verified' status,
+                    after
+                    which you will begin receiving real-time SOS assignments.</div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer
+        style="background: rgba(0,0,0,0.5); border-top: 1px solid var(--border-subtle); color: var(--text-muted); padding: 40px 0; text-align: center;">
+        <div class="container">
+            <div
+                style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 15px;">
+                Jeev<span style="color: var(--brand-primary)">Care</span></div>
+            <p>&copy; 2026 JeevCare Advanced Civic Ecosystem. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="/js/layout.js"></script>
+    <script>window.Layout.renderPublicNav('nav-placeholder', 'faq');</script>
+</body>
+
+</html>
