@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Provider Dashboard | JeevCare</title>
+    <link rel="icon" href="/assets/icons/favicon.ico">
+    <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+
+<body class="dash-layout">
+
+    <div id="nav-placeholder" data-nav="app" data-label="Provider Portal"></div>
+    <div id="sidebar-placeholder" data-role="service_provider" data-active="dashboard"></div>
+
+    <link rel="stylesheet" href="/assets/css/pages/provider/dashboard.css">
+    <link rel="stylesheet" href="/assets/css/utilities.css">
+
+    <main class="dash-main animate-fade-in">
+
+        <div class="hero-banner">
+            <h1 class="fs-25 mb-10">Welcome back, <span class="text-brand" id="bizName">Provider</span></h1>
+            <p class="text-muted fs-11 mw-600">This is your Command Center. Manage your
+                appointments, adjust your availability, and review tele-triage consultations.</p>
+        </div>
+
+        <div class="grid-3 mb-20">
+            <a href="/provider/bookings.html" class="glass-card stat-card">
+                <div class="stat-number stat-number--pending" id="statPending">-</div>
+                <h3 class="stat-title">Pending Requests</h3>
+                <p class="stat-caption">Awaiting approval</p>
+            </a>
+
+            <a href="/provider/bookings.html" class="glass-card stat-card">
+                <div class="stat-number stat-number--confirmed" id="statConfirmed">-</div>
+                <h3 class="stat-title">Upcoming Appts</h3>
+                <p class="stat-caption">Confirmed physical slots</p>
+            </a>
+
+            <a href="/provider/availability.html" class="glass-card stat-card">
+                <div class="stat-number stat-number--slots" id="statSlots">-</div>
+                <h3 class="stat-title">Active Time Slots</h3>
+                <p class="stat-caption">Published for booking</p>
+            </a>
+        </div>
+
+        <h3 class="mt-40 mb-20">Quick Actions</h3>
+        <div class="d-flex gap-15 flex-wrap">
+            <a href="/provider/availability.html" class="quick-action-btn">
+                <span class="fs-12">📅</span> Open New Slots
+            </a>
+            <a href="/provider/bookings.html" class="quick-action-btn">
+                <span class="fs-12">📋</span> Review Inbox
+            </a>
+        </div>
+
+    </main>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/layout.js"></script>
+    <script src="/assets/js/pages/provider/dashboard.js"></script>
+</body>
+
+</html>

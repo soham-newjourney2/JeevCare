@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adoptions & Fosters | JeevCare Provider</title>
+    <link rel="icon" href="/assets/icons/favicon.ico">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/pages/provider/adoptions.css">
+    <link rel="stylesheet" href="/assets/css/utilities.css">
+</head>
+
+<body class="dash-layout">
+    <div id="nav-placeholder" data-nav="app" data-label="Provider Portal"></div>
+    <div id="sidebar-placeholder" data-role="service_provider" data-active="adoptions"></div>
+
+    <main class="dash-main animate-fade-in">
+        <h1 class="fs-22 mb-10">Adoptions & Fosters</h1>
+        <p class="text-muted mb-30">List animals for adoption and manage applications from citizens.
+        </p>
+
+        <div class="split-layout">
+            <div>
+                <div class="glass-card">
+                    <h2 class="mb-20">List a Pet</h2>
+                    <form id="addPetForm">
+                        <div class="form-group">
+                            <label class="form-label" for="pName">Name</label>
+                            <input class="form-input" type="text" id="pName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="pSpecies">Species</label>
+                            <select class="form-input" id="pSpecies" required>
+                                <option value="Dog">Dog</option>
+                                <option value="Cat">Cat</option>
+                                <option value="Bird">Bird</option>
+                                <option value="Large Animal">Large Animal</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="pBreed">Breed (optional)</label>
+                            <input class="form-input" type="text" id="pBreed" placeholder="e.g. Indie, Labrador mix">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="pAge">Age in months (optional)</label>
+                            <input class="form-input" type="number" id="pAge" min="0" max="360" placeholder="e.g. 14">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="pHealth">Health</label>
+                            <select class="form-input" id="pHealth">
+                                <option value="Healthy">Healthy</option>
+                                <option value="Recovering">Recovering</option>
+                                <option value="Special Needs">Special Needs</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="pDesc">Description & Needs</label>
+                            <textarea class="form-input" id="pDesc" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Create Profile</button>
+                    </form>
+                </div>
+
+                <h2 class="mt-30 mb-15">Your Listed Pets</h2>
+                <div id="myPetsContainer">Loading pets...</div>
+            </div>
+
+            <div>
+                <div class="glass-card">
+                    <h2 class="mb-20">Adoption Applications</h2>
+                    <div id="applicationsContainer">Loading applications...</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/layout.js"></script>
+    <script src="/assets/js/pages/provider/adoptions.js"></script>
+</body>
+
+</html>

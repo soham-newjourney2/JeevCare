@@ -1,0 +1,39 @@
+.leaderboard-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.leaderboard-row:last-child {
+    border-bottom: none;
+}
+
+.rank {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #d1d5db;
+    width: 40px;
+}
+
+.rank.top-1 {
+    color: gold;
+}
+
+.rank.top-2 {
+    color: silver;
+}
+
+.rank.top-3 {
+    color: #cd7f32;
+}
+
+.badge-tag {
+    margin-left: 5px;
+    padding: 2px 6px;
+    font-size: 0.8rem;
+    color: #b45309;
+    background: #fef3c7;
+    border-radius: 10px;
+}

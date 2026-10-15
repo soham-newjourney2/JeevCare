@@ -1,0 +1,74 @@
+.hero-banner {
+    background: linear-gradient(135deg, hsla(145, 63%, 42%, 0.1) 0%, hsla(207, 90%, 54%, 0.1) 100%);
+    border: 1px solid hsla(145, 63%, 42%, 0.2);
+    border-radius: var(--border-radius);
+    padding: 40px;
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card {
+    display: block;
+    text-align: center;
+    color: inherit;
+    transition: var(--transition-fast);
+    border: 1px solid var(--glass-border);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--brand-primary);
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: 800;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.stat-number--pending {
+    background-image: linear-gradient(45deg, var(--color-info), var(--brand-primary));
+}
+
+.stat-number--confirmed {
+    background-image: linear-gradient(45deg, var(--color-success), #10b981);
+}
+
+.stat-number--slots {
+    background-image: linear-gradient(45deg, #f59e0b, #d97706);
+}
+
+.stat-title {
+    margin-top: 10px;
+    font-size: 1.2rem;
+}
+
+.stat-caption {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.quick-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px 25px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text-main);
+    font-weight: 500;
+    transition: var(--transition-fast);
+}
+
+.quick-action-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--brand-primary);
+    color: var(--brand-primary);
+}

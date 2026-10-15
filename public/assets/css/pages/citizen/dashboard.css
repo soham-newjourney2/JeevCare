@@ -1,0 +1,26 @@
+.metric-card {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.metric-number {
+    font-size: 3rem;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    color: var(--brand-primary);
+    margin-bottom: 10px;
+}
+
+.metric-label {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.badge-gold {
+    color: #fff;
+    font-weight: 700;
+    border: 0;
+    background: linear-gradient(135deg, gold, orange);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}

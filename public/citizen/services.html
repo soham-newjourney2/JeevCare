@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet Services | JeevCare</title>
+    <link rel="icon" href="/assets/icons/favicon.ico">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/pages/citizen/services.css">
+    <link rel="stylesheet" href="/assets/css/utilities.css">
+</head>
+
+<body class="dash-layout">
+
+    <div id="nav-placeholder" data-nav="app" data-label="Citizen Portal"></div>
+
+    <div id="sidebar-placeholder" data-role="citizen" data-active="services"></div>
+
+    <main class="dash-main animate-fade-in">
+        <h1 class="fs-22 mb-10">Verified Pet Services</h1>
+        <p class="text-muted mb-40">Discover and book appointments with trusted veterinarians and
+            animal shelters.</p>
+
+        <div id="loader">Fetching available services...</div>
+        <div id="servicesContainer" class="grid-3 d-none">
+        </div>
+    </main>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/layout.js"></script>
+
+    <script src="/assets/js/pages/citizen/services.js"></script>
+</body>
+
+</html>

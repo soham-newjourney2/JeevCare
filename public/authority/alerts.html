@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Broadcast Alerts | JeevCare Authority</title>
+    <link rel="icon" href="/assets/icons/favicon.ico">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/utilities.css">
+</head>
+
+<body class="dash-layout">
+
+    <div id="nav-placeholder" data-nav="app" data-label="Authority Portal"></div>
+    <div id="sidebar-placeholder" data-role="authority" data-active="alerts"></div>
+
+    <main class="dash-main animate-fade-in">
+        <h1 class="fs-22 mb-30">Broadcast Emergency Alerts</h1>
+
+        <div class="glass-card mw-600">
+            <h3>New Alert</h3>
+            <p class="text-muted fs-09 mb-20">Use this form to instantly broadcast
+                warnings or notices to all citizens in the area.</p>
+
+            <form id="alertForm">
+                <div class="form-group">
+                    <label class="form-label" for="severity">Severity Level</label>
+                    <select class="form-input" id="severity" required>
+                        <option value="info">Information</option>
+                        <option value="warning">Warning</option>
+                        <option value="critical">Critical Emergency</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="targetArea">Target Area</label>
+                    <input class="form-input" type="text" id="targetArea" placeholder="e.g., Downtown District or 'All'" value="All"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="messageText">Message Content</label>
+                    <textarea class="form-input" id="messageText" rows="4" placeholder="Brief and clear instructions..."
+                        required></textarea>
+                </div>
+
+                <div id="formError" class="error-msg"></div>
+
+                <button type="submit" class="btn btn-primary w-100">Broadcast Message</button>
+            </form>
+        </div>
+    </main>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/layout.js"></script>
+    <script src="/assets/js/pages/authority/alerts.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+.metric-card {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.metric-number {
+    font-size: 3rem;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    color: var(--brand-primary);
+    margin-bottom: 10px;
+}
+
+.metric-label {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.alert-box {
+    background: hsla(354, 70%, 54%, 0.1);
+    border: 1px solid hsla(354, 70%, 54%, 0.3);
+    padding: 15px;
+    border-radius: var(--border-radius);
+    color: var(--color-danger);
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: none;
+}

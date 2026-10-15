@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cases Pool | JeevCare</title>
+    <link rel="icon" href="/assets/icons/favicon.ico">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/pages/ngo/cases-pool.css">
+    <link rel="stylesheet" href="/assets/css/utilities.css">
+</head>
+
+<body class="dash-layout">
+
+    <div id="nav-placeholder" data-nav="app" data-label="NGO Portal"></div>
+
+    <div id="sidebar-placeholder" data-role="ngo" data-active="pool"></div>
+
+    <main class="dash-main animate-fade-in">
+        <div class="d-flex justify-between items-center mb-30">
+            <h1 class="fs-22 m-0">Assigned Cases Pool</h1>
+        </div>
+        <p class="text-muted mb-30">These emergencies were auto-routed to your NGO based on
+            proximity. Accept a case to deploy your team.</p>
+
+        <div id="loader">Scanning assigned queue...</div>
+        <div class="d-none" id="poolContainer"></div>
+
+        <div id="emptyState" class="glass-card text-center d-none p-60">
+            <div class="fs-3 mb-20">✅</div>
+            <h3>Queue Clear</h3>
+            <p class="text-muted">No pending assignments routed to you right now.</p>
+        </div>
+    </main>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/layout.js"></script>
+
+    <script src="/assets/js/pages/ngo/cases-pool.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+.fundraiser-card {
+    padding: 24px;
+    transition: var(--transition-fast);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.fundraiser-card:hover {
+    border-color: var(--brand-primary);
+}
+
+.progress-bar-bg {
+    background: #e5e7eb;
+    border-radius: 50px;
+    height: 10px;
+    width: 100%;
+    margin: 15px 0 5px 0;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    background: var(--brand-primary);
+    height: 100%;
+    border-radius: 50px;
+    transition: width 1s ease-in-out;
+}
+
+.campaign-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.donation-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}

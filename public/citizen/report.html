@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Emergency | JeevCare</title>
+    <link rel="icon" href="/assets/icons/favicon.ico">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/pages/citizen/report.css">
+    <link rel="stylesheet" href="/assets/css/utilities.css">
+</head>
+
+<body class="dash-layout">
+
+    <div id="nav-placeholder" data-nav="app" data-label="Citizen Portal"></div>
+
+    <div id="sidebar-placeholder" data-role="citizen" data-active="report"></div>
+
+    <main class="dash-main animate-fade-in">
+        <h1 class="fs-22 mb-30">Report an Animal Emergency</h1>
+
+        <div class="glass-card form-card">
+            <div class="d-none p-15 mb-20 fw-600 rounded" id="statusBox"></div>
+
+            <form id="incidentForm">
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label" for="animalType">Animal Type</label>
+                        <select id="animalType" class="form-input" required>
+                            <option value="Dog">Dog</option>
+                            <option value="Cat">Cat</option>
+                            <option value="Cow/Cattle">Cow/Cattle</option>
+                            <option value="Bird">Bird</option>
+                            <option value="Wildlife">Wildlife</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="concernType">Primary Concern</label>
+                        <select id="concernType" class="form-input" required>
+                            <option value="Injured/Accident">Injured/Accident</option>
+                            <option value="Sick/Disease">Sick/Disease</option>
+                            <option value="Trapped/Stuck">Trapped/Stuck</option>
+                            <option value="Abuse/Cruelty">Abuse/Cruelty</option>
+                            <option value="Aggressive">Aggressive</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="description">Detailed Description</label>
+                    <textarea id="description" class="form-input" rows="4"
+                        placeholder="Describe the animal's condition and visible injuries..." required></textarea>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label" for="image">Upload Image (Optional)</label>
+                        <input type="file" id="image" class="form-input" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label text-danger">Severity Flag</label>
+                        <label class="sos-toggle">
+                            <input type="checkbox" id="urgencyFlag">
+                            <span>Mark as <strong>CRITICAL SOS</strong> (Life-threatening)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <hr class="divider my-30">
+
+                <h3>Location Data</h3>
+                <p id="mapWarning">Tap "Detect Current Location" so we can send this case to the nearest NGO.</p>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label" for="lat">Latitude</label>
+                        <input type="text" id="lat" class="form-input" readonly placeholder="Auto-detected">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="lng">Longitude</label>
+                        <input type="text" id="lng" class="form-input" readonly placeholder="Auto-detected">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-outline mb-20" data-action="detect-location">Detect Current
+                    Location</button>
+
+                <button type="submit" class="btn btn-primary w-100 mt-20"
+                    id="submitBtn">Submit Emergency Report</button>
+            </form>
+        </div>
+    </main>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/layout.js"></script>
+
+    <script src="/assets/js/pages/citizen/report.js"></script>
+</body>
+
+</html>

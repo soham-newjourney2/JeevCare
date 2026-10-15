@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Availability | JeevCare Provider</title>
+    <link rel="icon" href="/assets/icons/favicon.ico">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/pages/provider/availability.css">
+    <link rel="stylesheet" href="/assets/css/utilities.css">
+</head>
+
+<body class="dash-layout">
+    <div id="nav-placeholder" data-nav="app" data-label="Provider Portal"></div>
+    <div id="sidebar-placeholder" data-role="service_provider" data-active="availability"></div>
+
+    <main class="dash-main animate-fade-in">
+        <h1 class="fs-22 mb-10">Schedule Availability</h1>
+        <p class="text-muted mb-30">Open your time slots to allow citizens to book physical or
+            virtual consultations.</p>
+
+        <div class="split-layout">
+            <div class="glass-card slot-form-card">
+                <h3 class="mb-20 d-flex items-center gap-10">
+                    <span class="text-success">+</span> New Time Slot
+                </h3>
+                <form class="d-flex flex-col gap-15" id="addSlotForm">
+                    <div class="form-group m-0">
+                        <label class="form-label" for="slotDate">Date</label>
+                        <input type="date" id="slotDate" class="form-input" required>
+                    </div>
+                    <div class="form-group m-0">
+                        <label class="form-label" for="slotTime">Start Time</label>
+                        <input type="time" id="slotTime" class="form-input" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 mt-10 publish-btn">Publish Slot to Citizens</button>
+                    <div id="errorMsg" class="error-msg d-none mt-10"></div>
+                </form>
+            </div>
+
+            <div>
+                <h3 class="mb-20">Your Upcoming Schedule</h3>
+                <div id="slotsContainer">
+                    <p class="text-muted">Loading slots...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/layout.js"></script>
+    <script src="/assets/js/pages/provider/availability.js"></script>
+</body>
+
+</html>

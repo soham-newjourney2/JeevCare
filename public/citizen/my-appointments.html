@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Appointments | JeevCare Citizen</title>
+    <link rel="icon" href="/assets/icons/favicon.ico">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/pages/citizen/my-appointments.css">
+    <link rel="stylesheet" href="/assets/css/utilities.css">
+</head>
+
+<body class="dash-layout">
+
+    <div id="nav-placeholder" data-nav="app" data-label="Citizen Portal"></div>
+    <div id="sidebar-placeholder" data-role="citizen" data-active="appointments"></div>
+
+    <main class="dash-main animate-fade-in">
+        <h1 class="fs-22 mb-10">My Appointments</h1>
+        <p class="text-muted mb-30">Track your bookings with vets, shelters, and other physical
+            service providers.</p>
+
+        <div id="errorMsg" class="error-msg d-none mb-20"></div>
+
+        <div id="loader">Fetching your appointments...</div>
+
+        <div class="d-none" id="appointmentsContainer">
+        </div>
+    </main>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/layout.js"></script>
+    <script src="/assets/js/pages/citizen/my-appointments.js"></script>
+</body>
+
+</html>

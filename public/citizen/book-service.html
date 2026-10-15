@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Service | JeevCare</title>
+    <link rel="icon" href="/assets/icons/favicon.ico">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/utilities.css">
+</head>
+
+<body class="dash-layout">
+
+    <div id="nav-placeholder" data-nav="app" data-label="Citizen Portal"></div>
+
+    <div id="sidebar-placeholder" data-role="citizen" data-active="services"></div>
+
+    <main class="dash-main animate-fade-in">
+        <a class="d-inline-block mb-20" href="/citizen/services.html">&larr; Back to Directory</a>
+
+        <div class="glass-card mw-600">
+            <h2 id="formTitle">Book Appointment</h2>
+            <p class="text-muted mb-30">Request a slot. The provider will confirm your booking.</p>
+
+            <div class="d-none p-15 mb-20 fw-600 rounded" id="statusBox"></div>
+
+            <form id="bookingForm">
+                <input type="hidden" id="providerId">
+                <div class="form-group">
+                    <label class="form-label" for="serviceType">Service Type</label>
+                    <select id="serviceType" class="form-input" required disabled>
+                        <option value="vet">Veterinary Care</option>
+                        <option value="shelter">Shelter Visit</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="slotSelect">Select Available Time Slot</label>
+                    <select id="slotSelect" class="form-input" required>
+                        <option value="">Loading slots...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="notes">Notes for Provider / Symptoms</label>
+                    <textarea id="notes" class="form-input" rows="4" required
+                        placeholder="Describe what you need help with..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary w-100" id="submitBtn">Request
+                    Appointment</button>
+            </form>
+        </div>
+    </main>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/layout.js"></script>
+
+    <script src="/assets/js/pages/citizen/book-service.js"></script>
+</body>
+
+</html>

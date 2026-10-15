@@ -1,0 +1,43 @@
+.legal-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 50px;
+}
+
+.legal-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: var(--text-main);
+}
+
+.legal-content h2 {
+    font-size: 1.5rem;
+    color: var(--brand-primary);
+    margin-top: 40px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.legal-content p,
+.legal-content li {
+    color: var(--text-muted);
+    line-height: 1.8;
+    margin-bottom: 15px;
+}
+
+.legal-content ul {
+    padding-left: 20px;
+    margin-bottom: 20px;
+}
+
+.last-updated {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 40px;
+    opacity: 0.8;
+}
+
+strong {
+    color: var(--text-main);
+}

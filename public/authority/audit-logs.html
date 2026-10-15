@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit Logs | JeevCare Authority</title>
+    <link rel="icon" href="/assets/icons/favicon.ico">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/pages/authority/audit-logs.css">
+    <link rel="stylesheet" href="/assets/css/utilities.css">
+</head>
+
+<body class="dash-layout">
+
+    <div id="nav-placeholder" data-nav="app" data-label="Authority Portal"></div>
+    <div id="sidebar-placeholder" data-role="authority" data-active="audit-logs"></div>
+
+    <main class="dash-main animate-fade-in">
+        <h1 class="fs-22 mb-10">System Audit Logs</h1>
+        <p class="text-muted mb-30">Immutable record of sensitive administrative actions.</p>
+
+        <div id="loader">Fetching audit logs...</div>
+
+        <div class="glass-card d-none" id="logsCard">
+            <div id="logsContainer">
+            </div>
+        </div>
+    </main>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/layout.js"></script>
+    <script src="/assets/js/pages/authority/audit-logs.js"></script>
+</body>
+
+</html>

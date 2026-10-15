@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join JeevCare</title>
+    <link rel="icon" href="/assets/icons/favicon.ico">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/pages/auth/register.css">
+    <link rel="stylesheet" href="/assets/css/utilities.css">
+</head>
+
+<body>
+    <div class="bg-glow-1"></div>
+    <div class="bg-glow-2"></div>
+
+    <main class="container auth-container animate-fade-in">
+        <div class="auth-header">
+            <a href="/index.html" class="nav-logo justify-center fs-2">Jeev<span class="text-brand">Care</span></a>
+            <p class="mt-40 text-muted fs-11">Create an account to join the network.
+            </p>
+        </div>
+
+        <div class="glass-card auth-card">
+
+            <div class="role-selector">
+                <button type="button" class="role-btn active" data-role="citizen">Citizen</button>
+                <button type="button" class="role-btn" data-role="ngo">Rescue NGO</button>
+                <button type="button" class="role-btn" data-role="service_provider">Vets/Services</button>
+            </div>
+
+            <div id="errorBox" class="error-msg"></div>
+
+            <form id="registerForm">
+                <input type="hidden" id="selectedRole" value="citizen">
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label" for="name">Full Name</label>
+                        <input type="text" id="name" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address</label>
+                        <input type="email" id="email" class="form-input" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" id="password" class="form-input" minlength="6" required>
+                </div>
+
+                <div id="fields_citizen" class="dynamic-fields active">
+                    <p class="fs-085 text-muted mb-10">No extra details
+                        needed for
+                        Citizens.</p>
+                </div>
+
+                <div id="fields_ngo" class="dynamic-fields">
+                    <div class="form-group">
+                        <label class="form-label" for="organizationName">Organization Name</label>
+                        <input type="text" id="organizationName" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="registrationNumber">Registration PIN / License</label>
+                        <input type="text" id="registrationNumber" class="form-input">
+                    </div>
+                    <hr class="divider">
+                    <p class="fs-09 fw-600 mb-10 text-main">HQ
+                        Location Constraints</p>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label" for="ngo_lat">Latitude</label>
+                            <input type="text" id="ngo_lat" class="form-input" placeholder="e.g. 19.0760">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="ngo_lng">Longitude</label>
+                            <input type="text" id="ngo_lng" class="form-input" placeholder="e.g. 72.8777">
+                        </div>
+                    </div>
+                    <button type="button" class="btn mb-20 btn-ghost"
+                        data-action="detect-location" data-lat="ngo_lat" data-lng="ngo_lng">Detect
+                        Map Bounds</button>
+                    <div class="text-brand fs-08" id="ngo_loc_warning"></div>
+                </div>
+
+                <div id="fields_service_provider" class="dynamic-fields">
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label" for="businessName">Business Name</label>
+                            <input type="text" id="businessName" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="serviceType">Service Type</label>
+                            <select id="serviceType" class="form-input">
+                                <option value="vet">Veterinarian</option>
+                                <option value="shelter">Shelter</option>
+                            </select>
+                        </div>
+                    </div>
+                    <hr class="divider">
+                    <p class="fs-09 fw-600 mb-10 text-main">Clinic
+                        GPS Location</p>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label" for="sp_lat">Latitude</label>
+                            <input type="text" id="sp_lat" class="form-input" placeholder="e.g. 19.0760">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="sp_lng">Longitude</label>
+                            <input type="text" id="sp_lng" class="form-input" placeholder="e.g. 72.8777">
+                        </div>
+                    </div>
+                    <button type="button" class="btn mb-20 btn-ghost"
+                        data-action="detect-location" data-lat="sp_lat" data-lng="sp_lng">Drop
+                        Map Pin</button>
+                    <div class="text-brand fs-08" id="sp_loc_warning"></div>
+                </div>
+
+                <div class="form-group mt-40">
+                    <p class="fs-085 text-muted mb-20">By joining, you
+                        consent to GPS
+                        localization data when you report emergencies to route NGOs effectively.</p>
+                    <button type="submit" class="btn btn-primary w-100" id="registerBtn">Create
+                        Account</button>
+                </div>
+            </form>
+
+            <div class="text-center mt-40 fs-095 text-muted">
+                Already have an account? <a class="fw-600" href="/auth/login.html">Login instead</a>
+            </div>
+        </div>
+    </main>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/pages/auth/register.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign Manager | JeevCare NGO</title>
+    <link rel="icon" href="/assets/icons/favicon.ico">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/pages/ngo/fundraisers.css">
+    <link rel="stylesheet" href="/assets/css/utilities.css">
+</head>
+
+<body class="dash-layout">
+
+    <div id="nav-placeholder" data-nav="app" data-label="NGO Portal"></div>
+    <div id="sidebar-placeholder" data-role="ngo" data-active="fundraisers"></div>
+
+    <main class="dash-main animate-fade-in">
+        <div class="d-flex justify-between items-center mb-30">
+            <h1 class="fs-22 mb-0">Campaign Manager</h1>
+            <button class="btn btn-primary" data-action="open-create">+ Create Fundraiser</button>
+        </div>
+
+        <div id="loader">Loading your active campaigns...</div>
+        <div id="campaignsContainer" class="grid-2 d-none">
+        </div>
+    </main>
+
+    <div id="createModal" class="modal-overlay">
+        <div class="glass-card w-100 mw-500">
+            <h2 class="mb-20">Launch Emergency Fundraiser</h2>
+
+            <form id="campaignForm">
+                <div class="form-group">
+                    <label class="form-label" for="campTitle">Campaign Title</label>
+                    <input type="text" id="campTitle" class="form-input"
+                        placeholder="e.g., Surgery for Injured Stray Dog" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="campDesc">Description (Why are funds needed?)</label>
+                    <textarea id="campDesc" class="form-input" rows="3"
+                        placeholder="Explain the situation and how the funds will be utilized..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="campTarget">Target Amount (INR)</label>
+                    <input type="number" id="campTarget" class="form-input" placeholder="e.g., 15000" min="500"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="campCase">Link to specific Case ID (Optional)</label>
+                    <input type="text" id="campCase" class="form-input" placeholder="Paste Case ID if applicable">
+                </div>
+
+                <div id="modalError" class="error-msg d-none"></div>
+
+                <div class="d-flex gap-10 mt-25">
+                    <button type="submit" class="btn btn-primary flex-1" id="submitBtn">Launch
+                        Campaign</button>
+                    <button type="button" class="btn btn-outline flex-1" data-action="close-create">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/layout.js"></script>
+    <script src="/assets/js/pages/ngo/fundraisers.js"></script>
+</body>
+
+</html>

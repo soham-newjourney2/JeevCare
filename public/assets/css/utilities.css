@@ -1,0 +1,90 @@
+/* Utility classes: one declaration each, applied in markup instead of inline styles */
+.border-0 { border: 0 !important; }
+.border-b { border-bottom: 1px solid var(--glass-border) !important; }
+.border-t { border-top: 1px solid var(--glass-border) !important; }
+.capitalize { text-transform: capitalize !important; }
+.col-span-all { grid-column: 1 / -1 !important; }
+.d-block { display: block !important; }
+.d-flex { display: flex !important; }
+.d-inline-block { display: inline-block !important; }
+.d-none { display: none; }
+.delay-2 { animation-delay: 0.2s !important; }
+.flex-1 { flex-grow: 1 !important; }
+.flex-col { flex-direction: column !important; }
+.flex-wrap { flex-wrap: wrap !important; }
+.fs-2 { font-size: 2rem !important; }
+.fs-3 { font-size: 3rem !important; }
+.fs-08 { font-size: 0.8rem !important; }
+.fs-09 { font-size: 0.9rem !important; }
+.fs-11 { font-size: 1.1rem !important; }
+.fs-12 { font-size: 1.2rem !important; }
+.fs-18 { font-size: 1.8rem !important; }
+.fs-22 { font-size: 2.2rem !important; }
+.fs-25 { font-size: 2.5rem !important; }
+.fs-075 { font-size: 0.75rem !important; }
+.fs-085 { font-size: 0.85rem !important; }
+.fs-095 { font-size: 0.95rem !important; }
+.fw-600 { font-weight: 600 !important; }
+.fw-700 { font-weight: 700 !important; }
+.gap-10 { gap: 10px !important; }
+.gap-15 { gap: 15px !important; }
+.gap-20 { gap: 20px !important; }
+.items-center { align-items: center !important; }
+.items-start { align-items: flex-start !important; }
+.justify-between { justify-content: space-between !important; }
+.justify-center { justify-content: center !important; }
+.lh-relaxed { line-height: 1.6 !important; }
+.line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.m-0 { margin: 0 !important; }
+.mb-0 { margin-bottom: 0 !important; }
+.mb-5 { margin-bottom: 5px !important; }
+.mb-10 { margin-bottom: 10px !important; }
+.mb-15 { margin-bottom: 15px !important; }
+.mb-20 { margin-bottom: 20px !important; }
+.mb-25 { margin-bottom: 25px !important; }
+.mb-30 { margin-bottom: 30px !important; }
+.mb-40 { margin-bottom: 40px !important; }
+.mt-5 { margin-top: 5px !important; }
+.mt-10 { margin-top: 10px !important; }
+.mt-15 { margin-top: 15px !important; }
+.mt-20 { margin-top: 20px !important; }
+.mt-25 { margin-top: 25px !important; }
+.mt-30 { margin-top: 30px !important; }
+.mt-40 { margin-top: 40px !important; }
+.mt-auto { margin-top: auto !important; }
+.mw-100 { max-width: 100% !important; }
+.mw-300 { max-width: 300px !important; }
+.mw-400 { max-width: 400px !important; }
+.mw-500 { max-width: 500px !important; }
+.mw-600 { max-width: 600px !important; }
+.mw-800 { max-width: 800px !important; }
+.mx-auto { margin-left: auto !important; margin-right: auto !important; }
+.my-15 { margin-top: 15px !important; margin-bottom: 15px !important; }
+.my-30 { margin-top: 30px !important; margin-bottom: 30px !important; }
+.nowrap { white-space: nowrap !important; }
+.overflow-hidden { overflow: hidden !important; }
+.p-0 { padding: 0 !important; }
+.p-15 { padding: 15px !important; }
+.p-20 { padding: 20px !important; }
+.p-24 { padding: 24px !important; }
+.p-40 { padding: 40px !important; }
+.p-60 { padding: 60px !important; }
+.pb-20 { padding-bottom: 20px !important; }
+.pb-80 { padding-bottom: 80px !important; }
+.pb-120 { padding-bottom: 120px !important; }
+.pt-40 { padding-top: 40px !important; }
+.pt-100 { padding-top: 100px !important; }
+.pt-140 { padding-top: 140px !important; }
+.py-10 { padding-top: 10px !important; padding-bottom: 10px !important; }
+.rounded { border-radius: 8px !important; }
+.text-brand { color: var(--brand-primary) !important; }
+.text-center { text-align: center !important; }
+.text-danger { color: var(--color-danger) !important; }
+.text-info { color: var(--color-info) !important; }
+.text-left { text-align: left !important; }
+.text-main { color: var(--text-main) !important; }
+.text-muted { color: var(--text-muted) !important; }
+.text-right { text-align: right !important; }
+.text-success { color: var(--color-success) !important; }
+.w-100 { width: 100% !important; }

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veterinary Tele-Triage | JeevCare</title>
+    <link rel="icon" href="/assets/icons/favicon.ico">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/pages/citizen/tele-triage.css">
+    <link rel="stylesheet" href="/assets/css/utilities.css">
+</head>
+
+<body class="dash-layout">
+    <div id="nav-placeholder" data-nav="app" data-label="Citizen Portal"></div>
+    <div id="sidebar-placeholder" data-role="citizen" data-active="tele-triage"></div>
+
+    <main class="dash-main animate-fade-in">
+        <h1 class="fs-22 mb-10">Tele-Triage</h1>
+        <p class="text-muted mb-30">Book a virtual consultation with a vetted professional for minor
+            pet concerns.</p>
+
+        <div class="grid-2">
+            <div>
+                <div class="glass-card">
+                    <h2 class="mb-20">Book a Session</h2>
+                    <form id="bookForm">
+                        <div class="form-group">
+                            <label class="form-label" for="tVet">Select Veterinarian</label>
+                            <select id="tVet" class="form-input" required>
+                                <option value="">Loading professionals...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="tAnimal">Animal Type</label>
+                            <input type="text" id="tAnimal" class="form-input" placeholder="E.g. Dog, Cat, Parrot"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="tSymptoms">Symptoms / Reason for visit</label>
+                            <textarea id="tSymptoms" class="form-input" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="tSlot">Preferred Date & Time</label>
+                            <select id="tSlot" class="form-input" required disabled>
+                                <option value="">Select a vet first...</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Request Consultation</button>
+                    </form>
+                </div>
+            </div>
+
+            <div>
+                <div class="glass-card">
+                    <h2 class="mb-20">Your Consultations</h2>
+                    <div id="consultsList">Loading...</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/layout.js"></script>
+    <script src="/assets/js/pages/citizen/tele-triage.js"></script>
+</body>
+
+</html>

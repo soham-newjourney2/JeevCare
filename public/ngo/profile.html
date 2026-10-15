@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGO Profile & Verification | JeevCare</title>
+    <link rel="icon" href="/assets/icons/favicon.ico">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/pages/ngo/profile.css">
+    <link rel="stylesheet" href="/assets/css/utilities.css">
+</head>
+
+<body class="dash-layout">
+
+    <div id="nav-placeholder" data-nav="app" data-label="NGO Portal"></div>
+    <div id="sidebar-placeholder" data-role="ngo" data-active="profile"></div>
+
+    <main class="dash-main animate-fade-in">
+        <h1 class="fs-22 mb-10">Verification & Profile</h1>
+        <p class="text-muted mb-30">View your organization's details and verification status.</p>
+
+        <div id="loader">Loading profile...</div>
+
+        <div class="d-none" id="profileContainer">
+            <div class="glass-card profile-card">
+                <div class="d-flex justify-between items-start border-b pb-20">
+                    <div>
+                        <h2 class="mb-5 fs-18" id="orgName">---</h2>
+                        <p class="text-muted" id="pocName">Contact Person: ---</p>
+                    </div>
+                    <div id="verifyBadgeContainer">
+                    </div>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Registration Number</label>
+                        <span id="regNumber">---</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Email Address</label>
+                        <span id="pEmail">---</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Account Created</label>
+                        <span id="pDate">---</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Active Cases Allowed</label>
+                        <span>Dynamic Capacity</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card mt-30 card-info">
+                <h3>Verification Process</h3>
+                <p class="text-muted fs-095 lh-relaxed">
+                    To become verified and receive emergency cases directly from the system, local authorities will
+                    review your registration details.
+                    If you remain unverified for an extended period, please contact your municipal veterinary department
+                    directly with your registration details.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/layout.js"></script>
+    <script src="/assets/js/pages/ngo/profile.js"></script>
+</body>
+
+</html>

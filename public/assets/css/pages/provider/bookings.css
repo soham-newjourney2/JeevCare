@@ -1,0 +1,66 @@
+.tabs {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.tab {
+    padding: 12px 24px;
+    cursor: pointer;
+    color: var(--text-muted);
+    font: inherit;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.04);
+    border: none;
+    border-radius: 50px;
+    transition: var(--transition-fast);
+}
+
+.tab:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.tab.active {
+    background: var(--brand-primary);
+    color: white;
+    box-shadow: 0 4px 12px hsla(145, 63%, 42%, 0.2);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.req-card {
+    background: var(--glass-bg);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--glass-border);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.req-card.pending {
+    border-left: 4px solid var(--color-warning);
+}
+
+.req-card.confirmed,
+.req-card.scheduled {
+    border-left: 4px solid var(--color-success);
+}
+
+@media (max-width: 768px) {
+    .req-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+}

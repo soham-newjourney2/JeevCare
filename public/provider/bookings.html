@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Bookings | JeevCare Provider</title>
+    <link rel="icon" href="/assets/icons/favicon.ico">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/pages/provider/bookings.css">
+    <link rel="stylesheet" href="/assets/css/utilities.css">
+</head>
+
+<body class="dash-layout">
+    <div id="nav-placeholder" data-nav="app" data-label="Provider Portal"></div>
+    <div id="sidebar-placeholder" data-role="service_provider" data-active="bookings"></div>
+
+    <main class="dash-main animate-fade-in">
+        <h1 class="fs-22 mb-10">Service Requests</h1>
+        <p class="text-muted mb-30">Manage your physical bookings and virtual tele-triage
+            consultations.</p>
+
+        <div class="tabs">
+            <button type="button" class="tab active" data-tab="physical" data-action="tab">Physical Bookings</button>
+            <button type="button" class="tab" data-tab="virtual" data-action="tab">Virtual Tele-Triage</button>
+        </div>
+
+        <div id="physical" class="tab-content active">
+            <div id="loaderPhysical">Fetching physical bookings...</div>
+            <div id="physicalGrid"></div>
+        </div>
+
+        <div id="virtual" class="tab-content">
+            <div id="loaderVirtual">Fetching virtual consultations...</div>
+            <div id="virtualGrid"></div>
+        </div>
+    </main>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/layout.js"></script>
+    <script src="/assets/js/pages/provider/bookings.js"></script>
+</body>
+
+</html>

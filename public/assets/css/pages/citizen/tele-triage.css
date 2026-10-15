@@ -1,0 +1,9 @@
+.consult-card {
+    background: var(--glass-bg);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--glass-border);
+    border-left: 4px solid var(--brand-primary);
+}

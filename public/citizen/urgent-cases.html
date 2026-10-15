@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urgent Causes & Donations | JeevCare</title>
+    <link rel="icon" href="/assets/icons/favicon.ico">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/pages/citizen/urgent-cases.css">
+    <link rel="stylesheet" href="/assets/css/utilities.css">
+</head>
+
+<body class="dash-layout">
+
+    <div id="nav-placeholder" data-nav="app" data-label="Citizen Portal"></div>
+    <div id="sidebar-placeholder" data-role="citizen" data-active="donations"></div>
+
+    <main class="dash-main animate-fade-in">
+        <h1 class="fs-22 mb-10">Urgent Animal Causes</h1>
+        <p class="text-muted mb-40">Support local verified NGOs by contributing directly to critical
+            rescue scenarios and resource purchases.</p>
+
+        <div id="loader">Fetching active fundraisers...</div>
+        <div id="campaignsContainer" class="grid-3 d-none">
+        </div>
+
+        <h2 class="mt-40 mb-15">Your donations</h2>
+        <div id="historyContainer" class="glass-card p-20">Loading your donations...</div>
+    </main>
+
+    <div id="donationModal" class="donation-modal">
+        <div class="glass-card w-100 mw-400 modal-surface">
+            <h2 class="mb-5" id="modalTitle">Make a Contribution</h2>
+            <p class="text-muted fs-09 mb-20" id="modalNgo"></p>
+
+            <div class="form-group">
+                <label class="form-label" for="donationAmount">Donation Amount (INR)</label>
+                <input type="number" id="donationAmount" class="form-input" placeholder="e.g. 500" min="10">
+            </div>
+
+            <input type="hidden" id="activeCampaignId">
+            <div id="modalError" class="error-msg d-none"></div>
+
+            <div class="d-flex gap-10 mt-25">
+                <button class="btn btn-primary flex-1" data-action="confirm-donation" id="donateBtn">Donate
+                    Now</button>
+                <button class="btn btn-outline flex-1" data-action="close-modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/layout.js"></script>
+    <script src="/assets/js/pages/citizen/urgent-cases.js"></script>
+</body>
+
+</html>

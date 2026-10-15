@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Reports | JeevCare</title>
+    <link rel="icon" href="/assets/icons/favicon.ico">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/pages/citizen/my-reports.css">
+    <link rel="stylesheet" href="/assets/css/utilities.css">
+</head>
+
+<body class="dash-layout">
+
+    <div id="nav-placeholder" data-nav="app" data-label="Citizen Portal"></div>
+
+    <div id="sidebar-placeholder" data-role="citizen" data-active="history"></div>
+
+    <main class="dash-main animate-fade-in">
+        <div class="d-flex justify-between items-center mb-30">
+            <h1 class="fs-22 m-0">Case History</h1>
+            <a href="/citizen/report.html" class="btn btn-primary">+ New Report</a>
+        </div>
+
+        <div id="loader">Fetching your reports...</div>
+        <div id="reportsContainer" class="report-list d-none">
+        </div>
+
+        <div id="emptyState" class="glass-card text-center d-none p-60">
+            <div class="fs-3 mb-20">📋</div>
+            <h3>No reports yet</h3>
+            <p class="text-muted mb-20">You haven't reported any emergencies.</p>
+            <a href="/citizen/report.html" class="btn btn-primary">Make First Report</a>
+        </div>
+    </main>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/layout.js"></script>
+
+    <script src="/assets/js/pages/citizen/my-reports.js"></script>
+</body>
+
+</html>

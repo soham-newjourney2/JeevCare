@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incident Details | JeevCare</title>
+    <link rel="icon" href="/assets/icons/favicon.ico">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/pages/citizen/incident-detail.css">
+    <link rel="stylesheet" href="/assets/css/utilities.css">
+</head>
+
+<body class="dash-layout">
+
+    <div id="nav-placeholder" data-nav="app" data-label="Citizen Portal"></div>
+
+    <div id="sidebar-placeholder" data-role="citizen" data-active="history"></div>
+
+    <main class="dash-main animate-fade-in">
+        <a class="d-inline-block mb-20" href="/citizen/my-reports.html">&larr; Back to History</a>
+
+        <h1 id="titleText">Loading Case...</h1>
+        <div id="statusBadge" class="status-pill mb-20"></div>
+
+        <div id="ngoBox">
+            <h3 class="mb-5 text-info">Rescue Organization Assigned</h3>
+            <p class="fw-600" id="ngoNameText">Loading...</p>
+        </div>
+
+        <div class="grid-2">
+            <div class="glass-card detail-card">
+                <h3>Incident Information</h3>
+                <hr class="divider my-15">
+
+                <div class="detail-label">Animal Type</div>
+                <div class="detail-value" id="d_animal">--</div>
+
+                <div class="detail-label">Primary Concern</div>
+                <div class="detail-value" id="d_concern">--</div>
+
+                <div class="detail-label">Description</div>
+                <div class="detail-value" id="d_desc">--</div>
+
+                <div class="detail-label">Location (Lat, Lng)</div>
+                <div class="detail-value" id="d_loc">--</div>
+
+                <div class="d-none mt-20" id="imageBox">
+                    <div class="detail-label">Uploaded Image</div>
+                    <img class="mw-100 mt-10 rounded" id="d_img" src="">
+                </div>
+            </div>
+
+            <div class="glass-card detail-card">
+                <h3>Case Timeline</h3>
+                <hr class="divider my-15">
+                <div id="timelineContainer">
+                    <div class="timeline-item">
+                        <div class="timeline-date">Loading...</div>
+                        <div>Fetching timeline events...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/socket.io/socket.io.min.js"></script>
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/layout.js"></script>
+
+    <script src="/assets/js/pages/citizen/incident-detail.js"></script>
+</body>
+
+</html>

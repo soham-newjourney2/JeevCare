@@ -1,0 +1,27 @@
+.service-card {
+    background: var(--glass-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    padding: 24px;
+    text-align: center;
+    border: 1px solid var(--glass-border);
+    transition: var(--transition-fast);
+}
+
+.service-card:hover {
+    border-color: var(--brand-primary);
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+}
+
+.sv-type {
+    display: inline-block;
+    background: hsla(207, 90%, 54%, 0.1);
+    color: var(--color-info);
+    padding: 4px 10px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}

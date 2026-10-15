@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incident Reports | JeevCare Authority</title>
+    <link rel="icon" href="/assets/icons/favicon.ico">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/utilities.css">
+</head>
+
+<body class="dash-layout">
+
+    <div id="nav-placeholder" data-nav="app" data-label="Authority Portal"></div>
+    <div id="sidebar-placeholder" data-role="authority" data-active="reports"></div>
+
+    <main class="dash-main animate-fade-in">
+        <h1 class="fs-22 mb-30">All Jurisdiction Reports</h1>
+
+        <div id="loader">Fetching cases...</div>
+
+        <div class="glass-card p-0 overflow-hidden d-none" id="tableCard">
+            <div class="table-responsive">
+                <table class="data-table w-100">
+                    <thead class="text-left">
+                        <tr>
+                            <th class="border-b">Date</th>
+                            <th class="border-b">Reporter</th>
+                            <th class="border-b">Animal</th>
+                            <th class="border-b">Status</th>
+                            <th class="border-b text-right">
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportsBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/layout.js"></script>
+    <script src="/assets/js/pages/authority/reports.js"></script>
+</body>
+
+</html>

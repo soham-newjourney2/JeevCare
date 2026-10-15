@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active Cases | JeevCare</title>
+    <link rel="icon" href="/assets/icons/favicon.ico">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/pages/ngo/active-cases.css">
+    <link rel="stylesheet" href="/assets/css/utilities.css">
+</head>
+
+<body class="dash-layout">
+
+    <div id="nav-placeholder" data-nav="app" data-label="NGO Portal"></div>
+
+    <div id="sidebar-placeholder" data-role="ngo" data-active="active"></div>
+
+    <main class="dash-main animate-fade-in">
+        <h1 class="fs-22 mb-10">Active Field Cases</h1>
+        <p class="text-muted mb-30">Cases your team has accepted. Move each one forward as the rescue progresses.</p>
+
+        <div id="loader">Loading active operations...</div>
+        <div class="d-none" id="activeContainer"></div>
+
+        <div id="emptyState" class="glass-card text-center d-none p-60">
+            <div class="fs-3 mb-20">🏥</div>
+            <h3>No Active Field Ops</h3>
+            <p class="text-muted">No accepted cases right now. New cases appear in the Cases Pool.</p>
+        </div>
+    </main>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/layout.js"></script>
+
+    <script src="/assets/js/pages/ngo/active-cases.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,39 @@
+.report-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.report-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px;
+}
+
+.report-card:hover {
+    border-color: var(--brand-primary);
+}
+
+.meta-text {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+.grid-header {
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    color: var(--brand-dark);
+}
+
+.urgency-badge {
+    background: hsla(354, 70%, 54%, 0.1);
+    color: var(--color-danger);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    margin-left: 10px;
+}

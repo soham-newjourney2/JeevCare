@@ -1,0 +1,13 @@
+.log-entry {
+    font-family: monospace;
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--glass-border);
+    background: var(--glass-bg);
+    margin-bottom: 5px;
+    border-radius: 4px;
+}
+
+.log-action {
+    font-weight: bold;
+    color: var(--brand-primary);
+}
